@@ -28,6 +28,10 @@ class RenoventHruCard extends HTMLElement {
             <p>The ${entityId} is ${stateStr}.</p>
         `;
     }
+
+    static getStubConfig() {
+        return { entity: "sun.sun" }
+    }
 }
 
 customElements.define('renovent-hru-card', RenoventHruCard);
