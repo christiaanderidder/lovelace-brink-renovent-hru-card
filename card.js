@@ -1,31 +1,48 @@
-class RenoventHruCard extends HTMLElement {
+import {
+    LitElement,
+    html,
+    css,
+} from "https://unpkg.com/lit-element@2.0.1/lit-element.js?module";
 
-    config;
-    content;
+class RenoventHruCard extends LitElement {
+
+    _hass;
+
+    static get properties() {
+        return {
+            _config: { state: true },
+            _state: { state: true },
+        };
+    }
 
     setConfig(config) {
-        if (!config.entity) {
-            throw new Error('Please define an entity!');
-        }
-        this.config = config;
+        this._entity = config.entity;
     }
 
     set hass(hass) {
-        const entityId = this.config.entity;
-        const state = hass.states[entityId];
-        const stateStr = state ? state.state : 'unavailable';
+        this._hass = hass;
+        this._state = hass.states[this._entity];
+    }
 
-        if (!this.content) {
-            this.innerHTML = `
-                <ha-card header="Hello ${hass.user.name}!">
-                    <div class="card-content"></div>
-                </ha-card>
+    render () {
+        let content;
+        if (!this._state) {
+            content = html`
+                <p class="error">
+                    ${this._entity} is unavailable.
+                </p>
             `;
-            this.content = this.querySelector('div');
+        } else {
+            content = html`
+                <p>The ${this._entity} is ${this._state.state}.</p>
+            `;
         }
-
-        this.content.innerHTML = `
-            <p>The ${entityId} is ${stateStr}.</p>
+        return html`
+            <ha-card header="Hello ${this._hass.user.name}!">
+                <div class="card-content">
+                    ${content}
+                </div>
+            </ha-card>
         `;
     }
 
