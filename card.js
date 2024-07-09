@@ -4,6 +4,9 @@ class RenoventHruCard extends HTMLElement {
     content;
 
     setConfig(config) {
+        if (!config.entity) {
+            throw new Error('Please define an entity!');
+        }
         this.config = config;
     }
 
@@ -28,3 +31,10 @@ class RenoventHruCard extends HTMLElement {
 }
 
 customElements.define('renovent-hru-card', RenoventHruCard);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: 'renovent-hru-card',
+    name: 'Renovent HRU card',
+    description: "A custom card for the Brink Renovent HRU"
+});
