@@ -16,43 +16,70 @@ class RenoventHruCard extends LitElement {
     }
 
     static styles = css`
-        .house {
+        .hru {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hru-house {
             width: 100%;
             max-width: 400px;
             margin: 0;
         }
 
-        .house .roof {
+        .hru-house .hru-house-roof {
             z-index: 0;
             height: 100%;
             width: 100%;
             height: 40px;
         }
 
-        .house .roof svg {
+        .hru-house .hru-house-roof svg {
             width: 100%;
             height: 100%;
         }
 
-        .house .roof svg #stroke {
+        .hru-house .hru-house-roof svg #stroke {
             fill: white;
             stroke: red;
             stroke-width: 3px;
         }
 
-        .house .roof svg #triangle1 {
+        .hru-house .hru-house-roof svg #triangle1 {
             fill: var(--primary-text-color);
         }
 
-        .house .roof svg #triangle2 {
+        .hru-house .hru-house-roof svg #triangle2 {
             fill: var(--card-background-color);
         }
 
-        .house .structure {
+        .hru-house .hru-house-body {
             border: 3px solid var(--primary-text-color);    
             background: var(--card-background-color);            
             border-top: 0 none;
             padding: 5px;
+        }
+
+        .hru-fan-modes {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        mwc-button {
+            opacity: 0.5
+        } 
+
+        mwc-button ha-icon {
+            color: var(--primary-text-color);     
+        }
+
+        mwc-button[active]  {
+            opacity: 1.0
+        }
+
+        mwc-button[active] ha-icon {
+            color: var(--mdc-theme-primary);
         }
                 
     `;
@@ -77,22 +104,22 @@ class RenoventHruCard extends LitElement {
             `;
         } else {
             content = html`
-                <div class="house">
-                    <div class="roof">
+                <div class="hru-house">
+                    <div class="hru-house-roof">
                         <svg preserveAspectRatio="none" viewBox="0 0 400 45">
                             <polygon id="triangle1" points="400,45 400,40 200,0 0,40 0,45"></polygon>
                             <polygon id="triangle2" points="397,45 397,42 200,3 3,42 3,45"></polygon>
                         </svg>
                     </div>
-                    <div class="structure">
-                        ${this.renderFanModes()}
+                    <div class="hru-house-body">
+                        <div class="hru-fan-modes">${this.renderFanModes()}</div>
                     </div>
                 </div>
             `;
         }
         return html`
             <ha-card header="Renovent HRU">
-                <div class="card-content">
+                <div class="card-content hru">
                     ${content}
                 </div>
             </ha-card>
@@ -118,9 +145,7 @@ class RenoventHruCard extends LitElement {
                     .value=${button.value}
                     ?active=${this._fanMode.state === button.value}
                     @click=${this._changeFanSpeed}>
-                    <ha-icon
-                        .icon=${button.icon}>
-                    </ha-icon>
+                    <ha-icon .icon=${button.icon} />
                 </mwc-button>
             `);
     }
