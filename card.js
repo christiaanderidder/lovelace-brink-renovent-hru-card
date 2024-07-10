@@ -12,6 +12,8 @@ class RenoventHruCard extends LitElement {
         return {
             _config: { state: true },
             _fanMode: { state: true },
+            _outdoorAirTemperature: { state: true },
+            _indoorAirTemperature: { state: true },
         };
     }
 
@@ -55,15 +57,20 @@ class RenoventHruCard extends LitElement {
         }
 
         .hru-house .hru-house-body {
-            border: 3px solid var(--primary-text-color);    
-            background: var(--card-background-color);            
+            border: 3px solid var(--primary-text-color);
+            background: var(--card-background-color);
             border-top: 0 none;
+            min-height: 120px;
             padding: 5px;
+            position: relative;
+            display: flex;
         }
 
         .hru-fan-modes {
             display: flex;
             justify-content: space-around;
+            align-self: flex-end;
+            width: 100%;
         }
 
         mwc-button {
@@ -81,25 +88,47 @@ class RenoventHruCard extends LitElement {
         mwc-button[active] ha-icon {
             color: var(--mdc-theme-primary);
         }
-                
+
+        .hru-temperature {
+            position: absolute;
+            left: -10px;
+        }
+
+        .hru-temperature .hru-temperature-line {
+            border: 3px solid var(--primary-text-color);
+            border-left: 0 none;
+            border-right: 0 none;
+            background: var(--card-background-color);
+            margin: 5px 0;
+            padding: 0 3px;
+        }
+        
+        .hru-temperature .hru-temperature-line .arrow {
+            font-size: 2em;
+        }
+         
     `;
 
     setConfig(config) {
         this._fanModeEntity = config.fanModeEntity;
+        this._outdoorAirTemperatureEntity = config.outdoorAirTemperatureEntity;
+        this._indoorAirTemperatureEntity = config.indoorAirTemperatureEntity;
     }
 
     set hass(hass) {
         this._hass = hass;
         this._fanMode = hass.states[this._fanModeEntity];
+        this._outdoorAirTemperature = hass.states[this._outdoorAirTemperatureEntity];
+        this._indoorAirTemperature = hass.states[this._indoorAirTemperatureEntity];
     }
 
     render() {
-        console.log(this._fanMode);
         let content;
-        if (!this._fanMode) {
+        console.log(this._indoorAirTemperature)
+        if (!this._fanMode || !this._indoorAirTemperature || !this._outdoorAirTemperature) {
             content = html`
                 <p class="error">
-                    ${this._fanModeEntity} is unavailable.
+                    Some entities are unavailable.
                 </p>
             `;
         } else {
@@ -112,6 +141,14 @@ class RenoventHruCard extends LitElement {
                         </svg>
                     </div>
                     <div class="hru-house-body">
+                        <div class="hru-temperature">
+                            <div class="hru-temperature-line">
+                                <span class="arrow">⇨</span> ${this._outdoorAirTemperature.state}${this._outdoorAirTemperature.attributes["unit_of_measurement"]}
+                            </div>
+                            <div class="hru-temperature-line">
+                                <span class="arrow">⇦</span> ${this._indoorAirTemperature.state}${this._indoorAirTemperature.attributes["unit_of_measurement"]}
+                            </div>
+                        </div>
                         <div class="hru-fan-modes">${this.renderFanModes()}</div>
                     </div>
                 </div>
@@ -151,7 +188,11 @@ class RenoventHruCard extends LitElement {
     }
 
     static getStubConfig() {
-        return { fanModeEntity: "sensor.ebusd_excellent400_fanmode" }
+        return {
+            fanModeEntity: "sensor.ebusd_excellent400_fanmode",
+            indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
+            outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature"
+        };
     }
 }
 
