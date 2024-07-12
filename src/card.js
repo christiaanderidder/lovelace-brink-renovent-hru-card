@@ -4,7 +4,7 @@ import {
     css,
 } from "https://unpkg.com/lit-element@2.0.1/lit-element.js?module";
 
-class RenoventHruCard extends LitElement {
+class BrinkRenoventHruCard extends LitElement {
 
     _hass;
 
@@ -196,11 +196,11 @@ class RenoventHruCard extends LitElement {
     }
 }
 
-customElements.define('renovent-hru-card', RenoventHruCard);
+customElements.define('brink-renovent-hru-card', BrinkRenoventHruCard);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'renovent-hru-card',
-    name: 'Renovent HRU card',
+    type: 'brink-renovent-hru-card',
+    name: 'Brink Renovent HRU card',
     description: "A custom card for the Brink Renovent HRU"
 });
