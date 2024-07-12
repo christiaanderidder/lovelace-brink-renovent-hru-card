@@ -1,7 +1,7 @@
 import { LitElement, html } from "lit"
-import styles from "./styles.js";
+import { styles } from "./styles";
 
-class BrinkRenoventHruCard extends LitElement {
+export class BrinkRenoventHruCard extends LitElement {
 
     _hass;
 
