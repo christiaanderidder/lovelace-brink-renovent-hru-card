@@ -1,38 +1,41 @@
 import { LitElement, html } from "lit"
 import { styles } from "./styles";
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+
+interface Config extends LovelaceCardConfig {
+    fanModeEntity: string;
+    outdoorAirTemperatureEntity: string;
+    indoorAirTemperatureEntity: string;
+}
 
 export class BrinkRenoventHruCard extends LitElement {
+    
+    @state() private config: Config;
 
-    _hass;
+    @state() private fanMode: HassEntity;
+    @state() private outdoorAirTemperature: HassEntity;
+    @state() private indoorAirTemperature: HassEntity;
+    
+    private _hass;
 
     static styles = styles;
 
-    static get properties() {
-        return {
-            _config: { state: true },
-            _fanMode: { state: true },
-            _outdoorAirTemperature: { state: true },
-            _indoorAirTemperature: { state: true },
-        };
+    setConfig(config: Config) {
+        this.config = config;
     }
 
-    setConfig(config) {
-        this._fanModeEntity = config.fanModeEntity;
-        this._outdoorAirTemperatureEntity = config.outdoorAirTemperatureEntity;
-        this._indoorAirTemperatureEntity = config.indoorAirTemperatureEntity;
-    }
-
-    set hass(hass) {
+    set hass(hass: HomeAssistant) {
         this._hass = hass;
-        this._fanMode = hass.states[this._fanModeEntity];
-        this._outdoorAirTemperature = hass.states[this._outdoorAirTemperatureEntity];
-        this._indoorAirTemperature = hass.states[this._indoorAirTemperatureEntity];
+        this.fanMode = hass.states[this.config.fanModeEntity];
+        this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
+        this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
     }
 
     render() {
         let content;
-        console.log(this._indoorAirTemperature)
-        if (!this._fanMode || !this._indoorAirTemperature || !this._outdoorAirTemperature) {
+        console.log(this.indoorAirTemperature);
+        if (!this.fanMode || !this.indoorAirTemperature || !this.outdoorAirTemperature) {
             content = html`
                 <p class="error">
                     Some entities are unavailable.
@@ -50,10 +53,10 @@ export class BrinkRenoventHruCard extends LitElement {
                     <div class="hru-house-body">
                         <div class="hru-temperature">
                             <div class="hru-temperature-line">
-                                <span class="arrow">⇨</span> ${this._outdoorAirTemperature.state}${this._outdoorAirTemperature.attributes["unit_of_measurement"]}
+                                <span class="arrow">⇨</span> ${this.outdoorAirTemperature.state}${this.outdoorAirTemperature.attributes["unit_of_measurement"]}
                             </div>
                             <div class="hru-temperature-line">
-                                <span class="arrow">⇦</span> ${this._indoorAirTemperature.state}${this._indoorAirTemperature.attributes["unit_of_measurement"]}
+                                <span class="arrow">⇦</span> ${this.indoorAirTemperature.state}${this.indoorAirTemperature.attributes["unit_of_measurement"]}
                             </div>
                         </div>
                         <div class="hru-fan-modes">${this.renderFanModes()}</div>
@@ -87,11 +90,15 @@ export class BrinkRenoventHruCard extends LitElement {
             html`
                 <mwc-button
                     .value=${button.value}
-                    ?active=${this._fanMode.state === button.value}
-                    @click=${this._changeFanSpeed}>
+                    ?active=${this.fanMode.state === button.value}
+                    @click=${this.changeFanSpeed}>
                     <ha-icon .icon=${button.icon} ></ha-icon>
                 </mwc-button>
             `);
+    }
+
+    changeFanSpeed() {
+
     }
 
     static getStubConfig() {
