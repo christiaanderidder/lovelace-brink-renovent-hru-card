@@ -1,4 +1,15 @@
 {
+  "source": "src/index.js",
+  "main": "dist/card.js",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "targets": {
+    "module": {
+      "includeNodeModules": true
+    }
+  },
   "devDependencies": {
     "parcel": "^2.12.0"
   }
