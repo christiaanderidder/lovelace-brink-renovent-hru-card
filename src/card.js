@@ -1,9 +1,11 @@
-import { LitElement, html } from 'lit'
-import css from "bundle-text:./card.css";
+import { LitElement, html } from "lit"
+import styles from "./styles.js";
 
 class BrinkRenoventHruCard extends LitElement {
 
     _hass;
+
+    static styles = styles;
 
     static get properties() {
         return {
