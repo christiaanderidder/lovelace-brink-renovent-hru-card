@@ -87,7 +87,7 @@ class BrinkRenoventHruCard extends LitElement {
                     .value=${button.value}
                     ?active=${this._fanMode.state === button.value}
                     @click=${this._changeFanSpeed}>
-                    <ha-icon .icon=${button.icon} />
+                    <ha-icon .icon=${button.icon} ></ha-icon>
                 </mwc-button>
             `);
     }
