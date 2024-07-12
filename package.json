@@ -6,7 +6,7 @@
     "build": "parcel build"
   },
   "targets": {
-    "module": {
+    "main": {
       "includeNodeModules": true
     }
   },

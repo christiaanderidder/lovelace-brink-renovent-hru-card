@@ -1,4 +1,5 @@
 import { LitElement, html } from "lit"
+import { customElement, state } from 'lit/decorators';
 import { styles } from "./styles";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
@@ -9,6 +10,7 @@ interface Config extends LovelaceCardConfig {
     indoorAirTemperatureEntity: string;
 }
 
+@customElement('brink-renovent-hru-card')
 export class BrinkRenoventHruCard extends LitElement {
     
     @state() private config: Config;
