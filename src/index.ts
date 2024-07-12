@@ -1,5 +1,11 @@
 import { BrinkRenoventHruCard } from "./card";
 
+declare global {
+    interface Window {
+        customCards: Array<Object>;
+    }
+}
+
 customElements.define("brink-renovent-hru-card", BrinkRenoventHruCard);
 
 window.customCards = window.customCards || [];
