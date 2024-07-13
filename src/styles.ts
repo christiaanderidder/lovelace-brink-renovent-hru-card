@@ -2,7 +2,6 @@ import { css } from "lit";
 
 export const styles = css`
     .hru {
-        display: flex;
         align-items: center;
         justify-content: center;
     }
@@ -76,9 +75,8 @@ export const styles = css`
         background: var(--card-background-color);
         margin: 5px 0;
         padding: 0 3px;
-    }
-
-    .hru-temperature .hru-temperature-line .arrow {
-        font-size: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 `

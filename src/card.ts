@@ -62,10 +62,10 @@ export class BrinkRenoventHruCard extends LitElement {
                     <div class="hru-house-body">
                         <div class="hru-temperature">
                             <div class="hru-temperature-line">
-                                <span class="arrow">⇨</span> ${this.outdoorAirTemperature.state}${this.outdoorAirTemperature.attributes["unit_of_measurement"]}
+                                <ha-icon icon="mdi:arrow-left-thin"></ha-icon> ${this.outdoorAirTemperature.state}${this.outdoorAirTemperature.attributes["unit_of_measurement"]}
                             </div>
                             <div class="hru-temperature-line">
-                                <span class="arrow">⇦</span> ${this.indoorAirTemperature.state}${this.indoorAirTemperature.attributes["unit_of_measurement"]}
+                                <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.indoorAirTemperature.state}${this.indoorAirTemperature.attributes["unit_of_measurement"]}
                             </div>
                         </div>
                         <div class="hru-fan-modes">${this.renderFanModes()}</div>
