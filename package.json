@@ -1,12 +1,12 @@
 {
   "source": "src/index.ts",
-  "main": "dist/card.js",
+  "module": "dist/card.js",
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build"
   },
   "targets": {
-    "main": {
+    "module": {
       "includeNodeModules": true
     }
   },
