@@ -152,7 +152,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private renderTemperature(entity: HassEntity) {
         if (!entity) return "0.0";
-        return this.outdoorAirTemperature.state + this.outdoorAirTemperature.attributes["unit_of_measurement"];
+        return entity.state + entity.attributes.unit_of_measurement;
     }
 
     private renderZones() {
@@ -182,7 +182,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:molecule-co2"></ha-icon> ${entity.state}${entity.attributes["unit_of_measurement"]}
+                <ha-icon icon="mdi:molecule-co2"></ha-icon> ${entity.state}${entity.attributes.unit_of_measurement}
             </div>
         `;
     }
