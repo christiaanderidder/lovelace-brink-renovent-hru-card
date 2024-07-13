@@ -8,7 +8,6 @@ export const styles = css`
 
     .hru-house {
         width: 100%;
-        max-width: 400px;
         margin: 0;
     }
 
