@@ -50,7 +50,7 @@ export class BrinkRenoventHruCard extends LitElement {
             fanModeEntity: "sensor.ebusd_excellent400_fanmode",
             indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
             outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature",
-            bypassValvePositionEbypassValvePositionEntitytity: "sensor.ebusd_excellent400_bypassstatus"
+            bypassValvePositionEntity: "sensor.ebusd_excellent400_bypassstatus",
         };
     }
 
