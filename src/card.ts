@@ -63,16 +63,9 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     public render() {
-        let content;
-        console.log(this.indoorAirTemperature);
-        if (!this.fanMode || !this.indoorAirTemperature || !this.outdoorAirTemperature) {
-            content = html`
-                <p class="error">
-                    Some entities are unavailable.
-                </p>
-            `;
-        } else {
-            content = html`
+        return html`
+            <ha-card header="Renovent HRU">
+                <div class="card-content hru">
                 <div class="hru-house">
                     <div class="hru-house-roof">
                         <svg preserveAspectRatio="none" viewBox="0 0 400 45">
@@ -88,30 +81,39 @@ export class BrinkRenoventHruCard extends LitElement {
                         </svg>
                     </div>
                     <div class="hru-house-body">
-                        <div class="hru-temperature">
-                            <div class="hru-temperature-line">
-                                <ha-icon icon="mdi:arrow-left-thin"></ha-icon> ${this.outdoorAirTemperature.state}${this.outdoorAirTemperature.attributes["unit_of_measurement"]}
-                            </div>
-                            <div class="hru-temperature-line">
-                                <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.indoorAirTemperature.state}${this.indoorAirTemperature.attributes["unit_of_measurement"]}
-                            </div>
-                        </div>
+                            <div class="hru-temperature">${this.renderAirTemperature()}</div>
                         <div class="hru-sensors">${this.renderSensors()}</div>
                         <div class="hru-fan-modes">${this.renderFanModes()}</div>
                     </div>
                 </div>
-            `;
-        }
-        return html`
-            <ha-card header="Renovent HRU">
-                <div class="card-content hru">
-                    ${content}
                 </div>
             </ha-card>
         `;
     }
 
+    private renderAirTemperature() {
+        return html `
+            <div class="hru-temperature-line ${this.entityStateClass(this.outdoorAirTemperature)}">
+                <ha-icon icon="mdi:arrow-left-thin"></ha-icon> ${this.renderTemperature(this.outdoorAirTemperature)}
+            </div>
+            <div class="hru-temperature-line ${this.entityStateClass(this.indoorAirTemperature)}">
+                <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.renderTemperature(this.indoorAirTemperature)}
+            </div>
+        `;
+    }
+
+    private entityStateClass(entity: HassEntity) {
+        return entity ? "state-available" : "state-unavailable";
+    }
+
+    private renderTemperature(entity: HassEntity) {
+        if (!entity) return "0.0";
+        return this.outdoorAirTemperature.state + this.outdoorAirTemperature.attributes["unit_of_measurement"];
+    }
+
     private renderFanModes() {
+        if (!this.fanMode) return;
+
         return this.fanModes.map((button) =>
             html`
                 <mwc-button
