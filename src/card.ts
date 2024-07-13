@@ -197,11 +197,13 @@ export class BrinkRenoventHruCard extends LitElement {
             `);
     }
 
-    private setFanMode(e) {
-        this.ha.callService("select", "select_option", {
-            entity_id: e.currentTarget.entity.entity_id,
-            option: e.currentTarget.value
-        });
+    private setFanMode(ev: ButtonEvent) {
+        var entity = ev.currentTarget.entity;
+        var value = ev.currentTarget.value;
+
+        console.log("setFanMode", entity, value);
+
+        this.ha.callService("select", "select_option", { option: value }, { entity_id: entity.entity_id });
     }
 
     private fanModeStateClass(state) {
