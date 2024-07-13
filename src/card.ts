@@ -34,11 +34,11 @@ export class BrinkRenoventHruCard extends LitElement {
     
     private ha;
     private fanModes = [
-        { label: "Auto", value: "Auto", icon: "mdi:fan-auto" },
-        { label: "Holiday", value: "Holiday", icon: "mdi:fan-off" },
-        { label: "Reduced", value: "Reduced", icon: "mdi:fan-speed-1" },
-        { label: "Normal", value: "Normal", icon: "mdi:fan-speed-2" },
-        { label: "High", value: "High", icon: "mdi:fan-speed-3" }
+        { value: "Auto", icon: "mdi:fan-auto" },
+        { value: "Holiday", icon: "mdi:fan-off" },
+        { value: "Reduced", icon: "mdi:fan-speed-1" },
+        { value: "Normal", icon: "mdi:fan-speed-2" },
+        { value: "High", icon: "mdi:fan-speed-3" }
     ];
 
     public static styles = styles;
