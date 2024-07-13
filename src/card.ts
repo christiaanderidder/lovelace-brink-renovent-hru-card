@@ -27,7 +27,8 @@ interface ButtonEventTarget extends EventTarget {
 }
 
 interface Config extends LovelaceCardConfig {
-    fanModeEntity: string;
+    fanModeReadEntity: string;
+    fanModeWriteEntity: string;
     outdoorAirTemperatureEntity: string;
     indoorAirTemperatureEntity: string;
     bypassValvePositionEntity: string;
@@ -43,7 +44,8 @@ export class BrinkRenoventHruCard extends LitElement {
 
     @state() private config: Config;
 
-    @state() private fanMode: HassEntity;
+    @state() private fanModeRead: HassEntity;
+    @state() private fanModeWrite: HassEntity;
     @state() private outdoorAirTemperature: HassEntity;
     @state() private indoorAirTemperature: HassEntity;
     @state() private bypassValvePosition: HassEntity;
@@ -69,7 +71,8 @@ export class BrinkRenoventHruCard extends LitElement {
 
     public static getStubConfig() {
         return {
-            fanModeEntity: "sensor.ebusd_excellent400_fanmode",
+            fanModeReadEntity: "sensor.ebusd_excellent400_fanmode",
+            fanModeWriteEntity: "select.ebusd_excellent400_fanmode",
             indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
             outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature",
             bypassValvePositionEntity: "sensor.ebusd_excellent400_bypassstatus",
@@ -88,7 +91,8 @@ export class BrinkRenoventHruCard extends LitElement {
 
     public set hass(hass: HomeAssistant) {
         this.ha = hass;
-        this.fanMode = hass.states[this.config.fanModeEntity];
+        this.fanModeRead = hass.states[this.config.fanModeReadEntity];
+        this.fanModeWrite = hass.states[this.config.fanModeWriteEntity];
         this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
         this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
         this.bypassValvePosition = hass.states[this.config.bypassValvePositionEntity];
@@ -184,13 +188,13 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private renderFanModes() {
-        if (!this.fanMode) return;
+        if (!this.fanModeRead || !this.fanModeWrite) return;
 
         return this.fanModes.map((button) =>
             html `
                 <mwc-icon-button
                     .value=${button.value}
-                    .entity=${this.fanMode}
+                    .entity=${this.fanModeWrite}
                     @click=${this.setFanMode}>
                     <ha-icon icon=${button.icon} class=${this.fanModeStateClass(button.value)}></ha-icon>
                 </mwc-icon-button>
@@ -202,8 +206,8 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private fanModeStateClass(state) {
-        if (!this.fanMode) return "state-unavailable";
-        if (this.fanMode.state === state) return "state-focus";
+        if (!this.fanModeRead) return "state-unavailable";
+        if (this.fanModeRead.state === state) return "state-focus";
         return "state-available";
     }
 
