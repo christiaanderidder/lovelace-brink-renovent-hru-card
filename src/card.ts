@@ -19,22 +19,37 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private outdoorAirTemperature: HassEntity;
     @state() private indoorAirTemperature: HassEntity;
     
-    private _hass;
+    private ha;
+    private fanModes = [
+        { label: "Auto", value: "Auto", icon: "mdi:fan-auto" },
+        { label: "Holiday", value: "Holiday", icon: "mdi:fan-off" },
+        { label: "Reduced", value: "Reduced", icon: "mdi:fan-speed-1" },
+        { label: "Normal", value: "Normal", icon: "mdi:fan-speed-2" },
+        { label: "High", value: "High", icon: "mdi:fan-speed-3" }
+    ];
 
-    static styles = styles;
+    public static styles = styles;
 
-    setConfig(config: Config) {
+    public static getStubConfig() {
+        return {
+            fanModeEntity: "sensor.ebusd_excellent400_fanmode",
+            indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
+            outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature"
+        };
+    }
+
+    public setConfig(config: Config) {
         this.config = config;
     }
 
-    set hass(hass: HomeAssistant) {
-        this._hass = hass;
+    public set hass(hass: HomeAssistant) {
+        this.ha = hass;
         this.fanMode = hass.states[this.config.fanModeEntity];
         this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
         this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
     }
 
-    render() {
+    public render() {
         let content;
         console.log(this.indoorAirTemperature);
         if (!this.fanMode || !this.indoorAirTemperature || !this.outdoorAirTemperature) {
@@ -68,6 +83,7 @@ export class BrinkRenoventHruCard extends LitElement {
                                 <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.indoorAirTemperature.state}${this.indoorAirTemperature.attributes["unit_of_measurement"]}
                             </div>
                         </div>
+                        <div class="hru-sensors">${this.renderSensors()}</div>
                         <div class="hru-fan-modes">${this.renderFanModes()}</div>
                     </div>
                 </div>
@@ -82,39 +98,25 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    fanModes = [
-        { label: "Auto", value: "Auto", icon: "mdi:fan-auto" },
-        { label: "Holiday", value: "Holiday", icon: "mdi:fan-off" },
-        { label: "Reduced", value: "Reduced", icon: "mdi:fan-speed-1" },
-        { label: "Normal", value: "Normal", icon: "mdi:fan-speed-2" },
-        { label: "High", value: "High", icon: "mdi:fan-speed-3" }
-    ];
-
-    setFanMode(e) {
-        console.log("setFanMode", e.currentTarget.value);
-    }
-
-    renderFanModes() {
+    private renderFanModes() {
         return this.fanModes.map((button) =>
             html`
                 <mwc-button
                     .value=${button.value}
                     ?active=${this.fanMode.state === button.value}
-                    @click=${this.changeFanSpeed}>
+                    @click=${this.setFanMode}>
                     <ha-icon .icon=${button.icon} ></ha-icon>
                 </mwc-button>
             `);
     }
 
-    changeFanSpeed() {
-
+    private renderSensors() {
+        return html`
+                <p></p>
+            `;
     }
 
-    static getStubConfig() {
-        return {
-            fanModeEntity: "sensor.ebusd_excellent400_fanmode",
-            indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
-            outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature"
-        };
+    private setFanMode(e) {
+        console.log("setFanMode", e.currentTarget.value);
     }
 }
