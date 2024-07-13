@@ -25,18 +25,10 @@ export const styles = css`
         height: 100%;
     }
 
-    .hru-house .hru-house-roof svg #stroke {
-        fill: white;
-        stroke: red;
-        stroke-width: 3px;
-    }
-
-    .hru-house .hru-house-roof svg #triangle1 {
-        fill: var(--primary-text-color);
-    }
-
-    .hru-house .hru-house-roof svg #triangle2 {
+    .hru-house .hru-house-roof #roof {
         fill: var(--card-background-color);
+        stroke: var(--primary-text-color);
+        stroke-width: 6px; /* Double width, the outer half is clipped */
     }
 
     .hru-house .hru-house-body {

@@ -48,8 +48,15 @@ export class BrinkRenoventHruCard extends LitElement {
                 <div class="hru-house">
                     <div class="hru-house-roof">
                         <svg preserveAspectRatio="none" viewBox="0 0 400 45">
-                            <polygon id="triangle1" points="400,45 400,40 200,0 0,40 0,45"></polygon>
-                            <polygon id="triangle2" points="397,45 397,42 200,3 3,42 3,45"></polygon>
+                            <!-- https://alexwlchan.net/2021/inner-outer-strokes-svg/ -->
+                            <defs>
+                                <!-- polyline to prevent bottom border -->
+                                <polyline id="roof-shape" points="400,45 400,40 200,0 0,40 0,45" vector-effect="non-scaling-stroke"></polyline>
+                                <clipPath id="roof-shape-inside-only">
+                                    <polygon points="400,45 400,40 200,0 0,40 0,45"></polygon>
+                                </clipPath>
+                            </defs>
+                            <use id="roof" xlink:href="#roof-shape" clip-path="url(#roof-shape-inside-only)" />
                         </svg>
                     </div>
                     <div class="hru-house-body">
