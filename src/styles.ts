@@ -35,16 +35,40 @@ export const styles = css`
         background: var(--card-background-color);
         border-top: 0 none;
         min-height: 120px;
-        padding: 5px;
+        padding: 5px 45px;
         position: relative;
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .hru-sensors, .hru-fan-modes {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .state-focus {
+        color: var(--mdc-theme-primary);
+    }
+    .state-available {
+        color: var(--primary-text-color);
+    }
+    .state-unavailable {
+        color: var(--state-unavailable-color);
+    }
+    .state-error {
+        color: var(--state-icon-error-color);
+    }
+
+    .hru-sensors {
+        
     }
 
     .hru-fan-modes {
-        display: flex;
-        justify-content: space-around;
-        align-self: flex-end;
-        width: 100%;
+
     }
 
     mwc-button {
@@ -65,7 +89,7 @@ export const styles = css`
 
     .hru-temperature {
         position: absolute;
-        left: -10px;
+        left: -15px;
     }
 
     .hru-temperature .hru-temperature-line {
@@ -78,5 +102,6 @@ export const styles = css`
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 60px;
     }
 `
