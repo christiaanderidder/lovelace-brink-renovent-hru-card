@@ -21,6 +21,7 @@ interface Config extends LovelaceCardConfig {
     fanModeEntity: string;
     outdoorAirTemperatureEntity: string;
     indoorAirTemperatureEntity: string;
+    bypassValvePositionEntity: string;
 }
 
 @customElement('brink-renovent-hru-card')
@@ -31,6 +32,7 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private fanMode: HassEntity;
     @state() private outdoorAirTemperature: HassEntity;
     @state() private indoorAirTemperature: HassEntity;
+    @state() private bypassValvePosition: HassEntity;
     
     private ha;
     private fanModes = [
@@ -47,7 +49,8 @@ export class BrinkRenoventHruCard extends LitElement {
         return {
             fanModeEntity: "sensor.ebusd_excellent400_fanmode",
             indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
-            outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature"
+            outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature",
+            bypassValvePositionEbypassValvePositionEntitytity: "sensor.ebusd_excellent400_bypassstatus"
         };
     }
 
@@ -60,32 +63,33 @@ export class BrinkRenoventHruCard extends LitElement {
         this.fanMode = hass.states[this.config.fanModeEntity];
         this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
         this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
+        this.bypassValvePosition = hass.states[this.config.bypassValvePositionEntity];
     }
 
     public render() {
         return html`
             <ha-card header="Renovent HRU">
                 <div class="card-content hru">
-                <div class="hru-house">
-                    <div class="hru-house-roof">
-                        <svg preserveAspectRatio="none" viewBox="0 0 400 45">
-                            <!-- https://alexwlchan.net/2021/inner-outer-strokes-svg/ -->
-                            <defs>
-                                <!-- polyline to prevent bottom border -->
-                                <polyline id="roof-shape" points="400,45 400,40 200,0 0,40 0,45" vector-effect="non-scaling-stroke"></polyline>
-                                <clipPath id="roof-shape-inside-only">
-                                    <polygon points="400,45 400,40 200,0 0,40 0,45"></polygon>
-                                </clipPath>
-                            </defs>
-                            <use id="roof" xlink:href="#roof-shape" clip-path="url(#roof-shape-inside-only)" />
-                        </svg>
-                    </div>
-                    <div class="hru-house-body">
+                    <div class="hru-house">
+                        <div class="hru-house-roof">
+                            <svg preserveAspectRatio="none" viewBox="0 0 400 45">
+                                <!-- https://alexwlchan.net/2021/inner-outer-strokes-svg/ -->
+                                <defs>
+                                    <!-- polyline to prevent bottom border -->
+                                    <polyline id="roof-shape" points="400,45 400,40 200,0 0,40 0,45" vector-effect="non-scaling-stroke"></polyline>
+                                    <clipPath id="roof-shape-inside-only">
+                                        <polygon points="400,45 400,40 200,0 0,40 0,45"></polygon>
+                                    </clipPath>
+                                </defs>
+                                <use id="roof" xlink:href="#roof-shape" clip-path="url(#roof-shape-inside-only)" />
+                            </svg>
+                        </div>
+                        <div class="hru-house-body">
                             <div class="hru-temperature">${this.renderAirTemperature()}</div>
-                        <div class="hru-sensors">${this.renderSensors()}</div>
-                        <div class="hru-fan-modes">${this.renderFanModes()}</div>
+                            <div class="hru-sensors">${this.renderSensors()}</div>
+                            <div class="hru-fan-modes">${this.renderFanModes()}</div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </ha-card>
         `;
@@ -125,13 +129,26 @@ export class BrinkRenoventHruCard extends LitElement {
             `);
     }
 
-    private renderSensors() {
-        return html`
-                <p></p>
-            `;
-    }
-
     private setFanMode(e) {
         console.log("setFanMode", e.currentTarget.value);
+    }
+
+    private renderSensors() {
+        return html`
+            <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveIconClass()}></ha-icon>
+        `;
+    }
+
+    private bypassValveIcon() {
+        if (!this.bypassValvePosition) return "mdi:valve";
+        if (this.bypassValvePosition.state === "Open") return "mdi:valve-open";
+        if (this.bypassValvePosition.state === "Closed") return "mdi:valve-closed";
+        return "mdi:valve";
+    }
+
+    private bypassValveIconClass() {
+        if (!this.bypassValvePosition) return "state-unavailable";
+        if (this.bypassValvePosition.state === "Error") return "state-error";
+        return "state-available";
     }
 }
