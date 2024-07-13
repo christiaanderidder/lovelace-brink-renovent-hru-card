@@ -2,7 +2,7 @@ import { LitElement, html } from "lit"
 import { customElement, state } from 'lit/decorators';
 import { styles } from "./styles";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig, MoreInfoActionConfig, handleAction } from "custom-card-helpers";
 
 declare global {
     interface Window {
@@ -16,6 +16,15 @@ window.customCards.push({
     name: "Brink Renovent HRU card",
     description: "A custom card for the Brink Renovent HRU"
 });
+
+interface ButtonEvent extends MouseEvent {
+    currentTarget: ButtonEventTarget
+}
+
+interface ButtonEventTarget extends EventTarget {
+    entity: HassEntity,
+    value?: string
+}
 
 interface Config extends LovelaceCardConfig {
     fanModeEntity: string;
@@ -162,5 +171,17 @@ export class BrinkRenoventHruCard extends LitElement {
         if (!this.bypassValvePosition) return "state-unavailable";
         if (this.bypassValvePosition.state === "Error") return "state-error";
         return "state-available";
+    }
+
+    private moreInfo(ev: ButtonEvent) {
+        var entityId = ev.currentTarget.entity.entity_id;
+        var config = {
+            entity: entityId,
+            tap_action: {
+                entity: entityId,
+                action: "more-info"
+            } as MoreInfoActionConfig
+        }
+        handleAction(this, this.ha, config, "tap");
     }
 }
