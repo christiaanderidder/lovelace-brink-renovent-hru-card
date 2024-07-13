@@ -22,6 +22,7 @@ interface Config extends LovelaceCardConfig {
     outdoorAirTemperatureEntity: string;
     indoorAirTemperatureEntity: string;
     bypassValvePositionEntity: string;
+    airFilterEntity: string;
 }
 
 @customElement('brink-renovent-hru-card')
@@ -33,6 +34,7 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private outdoorAirTemperature: HassEntity;
     @state() private indoorAirTemperature: HassEntity;
     @state() private bypassValvePosition: HassEntity;
+    @state() private airFilter: HassEntity;
     
     private ha;
     private fanModes = [
@@ -51,6 +53,7 @@ export class BrinkRenoventHruCard extends LitElement {
             indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
             outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature",
             bypassValvePositionEntity: "sensor.ebusd_excellent400_bypassstatus",
+            airFilterEntity: "sensor.ebusd_excellent400_filternotification",
         };
     }
 
@@ -64,6 +67,7 @@ export class BrinkRenoventHruCard extends LitElement {
         this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
         this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
         this.bypassValvePosition = hass.states[this.config.bypassValvePositionEntity];
+        this.airFilter = hass.states[this.config.airFilterEntity];
     }
 
     public render() {
@@ -135,8 +139,16 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private renderSensors() {
         return html`
-            <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveIconClass()}></ha-icon>
+            <ha-icon icon="mdi:air-filter" class=${this.airFilterStateClass()}></ha-icon>
+            <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-icon>
         `;
+    }
+
+    private airFilterStateClass() {
+        if (!this.airFilter) return "state-unavailable";
+        if (this.airFilter.state === "Clean") return "state-available";
+        if (this.airFilter.state === "Dirty") return "state-error";
+        return "state-error";
     }
 
     private bypassValveIcon() {
@@ -146,7 +158,7 @@ export class BrinkRenoventHruCard extends LitElement {
         return "mdi:valve";
     }
 
-    private bypassValveIconClass() {
+    private bypassValveStateClass() {
         if (!this.bypassValvePosition) return "state-unavailable";
         if (this.bypassValvePosition.state === "Error") return "state-error";
         return "state-available";
