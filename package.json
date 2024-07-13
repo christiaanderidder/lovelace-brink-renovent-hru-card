@@ -1,5 +1,5 @@
 {
-  "source": "src/index.ts",
+  "source": "src/card.ts",
   "module": "dist/card.js",
   "scripts": {
     "watch": "parcel watch",

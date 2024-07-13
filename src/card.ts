@@ -4,6 +4,19 @@ import { styles } from "./styles";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
+declare global {
+    interface Window {
+        customCards: Array<Object>;
+    }
+}
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: "brink-renovent-hru-card",
+    name: "Brink Renovent HRU card",
+    description: "A custom card for the Brink Renovent HRU"
+});
+
 interface Config extends LovelaceCardConfig {
     fanModeEntity: string;
     outdoorAirTemperatureEntity: string;
