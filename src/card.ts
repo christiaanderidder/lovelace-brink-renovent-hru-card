@@ -32,6 +32,10 @@ interface Config extends LovelaceCardConfig {
     indoorAirTemperatureEntity: string;
     bypassValvePositionEntity: string;
     airFilterEntity: string;
+    co2Level1Entity: string;
+    co2Level2Entity: string;
+    co2Level3Entity: string;
+    co2Level4Entity: string;
 }
 
 @customElement('brink-renovent-hru-card')
@@ -44,6 +48,13 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private indoorAirTemperature: HassEntity;
     @state() private bypassValvePosition: HassEntity;
     @state() private airFilter: HassEntity;
+
+    // CO2 demand mode sensors
+    @state() private zoneValvePosition: HassEntity;
+    @state() private co2Level1: HassEntity;
+    @state() private co2Level2: HassEntity;
+    @state() private co2Level3: HassEntity;
+    @state() private co2Level4: HassEntity;
     
     private ha;
     private fanModes = [
@@ -63,6 +74,11 @@ export class BrinkRenoventHruCard extends LitElement {
             outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature",
             bypassValvePositionEntity: "sensor.ebusd_excellent400_bypassstatus",
             airFilterEntity: "sensor.ebusd_excellent400_filternotification",
+            zoneValvePositionEntity: "sensor.ebusd_zonevalve_valveposition_zone",
+            co2Level1Entity: "number.ebusd_excellent400_co2sensor1level",
+            co2Level2Entity: "number.ebusd_excellent400_co2sensor2level",
+            co2Level3Entity: "number.ebusd_excellent400_co2sensor3level",
+            co2Level4Entity: "number.ebusd_excellent400_co2sensor4level",
         };
     }
 
@@ -77,6 +93,12 @@ export class BrinkRenoventHruCard extends LitElement {
         this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
         this.bypassValvePosition = hass.states[this.config.bypassValvePositionEntity];
         this.airFilter = hass.states[this.config.airFilterEntity];
+
+        this.zoneValvePosition = hass.states[this.config.zoneValvePositionEntity];
+        this.co2Level1 = hass.states[this.config.co2Level1Entity];
+        this.co2Level2 = hass.states[this.config.co2Level2Entity];
+        this.co2Level3 = hass.states[this.config.co2Level3Entity];
+        this.co2Level4 = hass.states[this.config.co2Level4Entity];
     }
 
     public render() {
@@ -100,6 +122,7 @@ export class BrinkRenoventHruCard extends LitElement {
                         <div class="hru-house-body">
                             <div class="hru-temperature">${this.renderAirTemperature()}</div>
                             <div class="hru-sensors">${this.renderSensors()}</div>
+                            <div class="hru-zones">${this.renderZones()}</div>
                             <div class="hru-fan-modes">${this.renderFanModes()}</div>
                         </div>
                     </div>
@@ -126,6 +149,38 @@ export class BrinkRenoventHruCard extends LitElement {
     private renderTemperature(entity: HassEntity) {
         if (!entity) return "0.0";
         return this.outdoorAirTemperature.state + this.outdoorAirTemperature.attributes["unit_of_measurement"];
+    }
+
+    private renderZones() {
+        return html`
+            <div>${this.renderZoneValvePosition(this.zoneValvePosition)}</div>
+            <div>
+                ${this.renderCO2Level(this.co2Level1)}
+                ${this.renderCO2Level(this.co2Level2)}
+                ${this.renderCO2Level(this.co2Level3)}
+                ${this.renderCO2Level(this.co2Level4)}
+            </div>
+        `;
+    }
+
+    private renderZoneValvePosition(entity: HassEntity) {
+        if (!entity) return;
+
+        return html`
+            <div>
+                <ha-icon icon="mdi:fan"></ha-icon> ${entity.state}
+            </div>
+        `;
+    }
+
+    private renderCO2Level(entity: HassEntity) {
+        if (!entity) return;
+
+        return html`
+            <div>
+                <ha-icon icon="mdi:molecule-co2"></ha-icon> ${entity.state}${entity.attributes["unit_of_measurement"]}
+            </div>
+        `;
     }
 
     private renderFanModes() {
