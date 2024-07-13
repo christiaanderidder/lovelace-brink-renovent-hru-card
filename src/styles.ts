@@ -35,61 +35,49 @@ export const styles = css`
         background: var(--card-background-color);
         border-top: 0 none;
         min-height: 120px;
-        padding: 5px 45px;
+        padding: 5px 60px;
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: flex-start;
+        gap: 10px;
     }
 
-    .hru-sensors, .hru-fan-modes {
+    .hru-sensors, .hru-fan-modes, .hru-zones {
         display: flex;
         justify-content: space-around;
         width: 100%;
         flex-shrink: 0;
     }
 
+    .hru-zones .hru-zone-line {
+        cursor: pointer;
+    }
+
     .state-focus {
         color: var(--mdc-theme-primary);
     }
+    
     .state-available {
         color: var(--primary-text-color);
     }
+
     .state-unavailable {
         color: var(--state-unavailable-color);
     }
+
     .state-error {
         color: var(--state-icon-error-color);
-    }
-
-    .hru-sensors {
-        
-    }
-
-    .hru-fan-modes {
-
-    }
-
-    mwc-button {
-        opacity: 0.5
-    }
-
-    mwc-button ha-icon {
-        color: var(--primary-text-color);
-    }
-
-    mwc-button[active] {
-        opacity: 1.0
-    }
-
-    mwc-button[active] ha-icon {
-        color: var(--mdc-theme-primary);
     }
 
     .hru-temperature {
         position: absolute;
         left: -15px;
+    }
+
+    ha-icon {
+        padding-top: -10px;
     }
 
     .hru-temperature .hru-temperature-line {

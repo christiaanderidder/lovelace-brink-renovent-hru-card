@@ -40,7 +40,7 @@ interface Config extends LovelaceCardConfig {
 
 @customElement('brink-renovent-hru-card')
 export class BrinkRenoventHruCard extends LitElement {
-    
+
     @state() private config: Config;
 
     @state() private fanMode: HassEntity;
@@ -55,7 +55,7 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private co2Level2: HassEntity;
     @state() private co2Level3: HassEntity;
     @state() private co2Level4: HassEntity;
-    
+
     private ha;
     private fanModes = [
         { value: "Auto", icon: "mdi:fan-auto" },
@@ -167,7 +167,7 @@ export class BrinkRenoventHruCard extends LitElement {
         if (!entity) return;
 
         return html`
-            <div>
+            <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
                 <ha-icon icon="mdi:fan"></ha-icon> ${entity.state}
             </div>
         `;
@@ -177,7 +177,7 @@ export class BrinkRenoventHruCard extends LitElement {
         if (!entity) return;
 
         return html`
-            <div>
+            <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
                 <ha-icon icon="mdi:molecule-co2"></ha-icon> ${entity.state}${entity.attributes["unit_of_measurement"]}
             </div>
         `;
@@ -187,24 +187,34 @@ export class BrinkRenoventHruCard extends LitElement {
         if (!this.fanMode) return;
 
         return this.fanModes.map((button) =>
-            html`
-                <mwc-button
+            html `
+                <mwc-icon-button
                     .value=${button.value}
-                    ?active=${this.fanMode.state === button.value}
+                    .entity=${this.fanMode}
                     @click=${this.setFanMode}>
-                    <ha-icon .icon=${button.icon} ></ha-icon>
-                </mwc-button>
+                    <ha-icon icon=${button.icon} class=${this.fanModeStateClass(button.value)}></ha-icon>
+                </mwc-icon-button>
             `);
     }
 
     private setFanMode(e) {
-        console.log("setFanMode", e.currentTarget.value);
+        console.log("setFanMode", e.currentTarget.entity, e.currentTarget.value);
+    }
+
+    private fanModeStateClass(state) {
+        if (!this.fanMode) return "state-unavailable";
+        if (this.fanMode.state === state) return "state-focus";
+        return "state-available";
     }
 
     private renderSensors() {
         return html`
-            <ha-icon icon="mdi:air-filter" class=${this.airFilterStateClass()}></ha-icon>
-            <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-icon>
+            <mwc-icon-button .entity=${this.airFilter} @click=${this.moreInfo}>
+                <ha-icon icon="mdi:air-filter" class=${this.airFilterStateClass()}></ha-icon>
+            </mwc-icon-button>
+            <mwc-icon-button .entity=${this.bypassValvePosition} @click=${this.moreInfo}>
+                <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-icon>
+            </mwc-icon-button>
         `;
     }
 
