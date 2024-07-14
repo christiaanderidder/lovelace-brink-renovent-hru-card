@@ -1,8 +1,8 @@
 # Brink Renovent HRU card
-This repository contains a custom card for the Brink Renovent heat recuperation unit (HRU) using eBUSd and MQTT.
+This repository contains a custom Home Assistant card for the Brink Renovent heat recuperation unit (HRU).
 
-This card was tested using the Brink Renovent 400 HRU.
+For more information on how to connect the Brink Renovent Excellent heat recuperation unit (HRU / WTW) to Home Assitent, see: [Brink Renovent Excellent Home Automation](https://github.com/christiaanderidder/brink-renovent-hru)
 
-This code is provided as is and no additional support will be provided.
+**This code is provided as-is. No support will be provided through issues. PRs are welcome.**
 
-The "house"-layout used is based on https://github.com/mweimerskirch/lovelace-hacomfoairmqtt/
+The card layout was inspired by [lovelace-hacomfoairmqtt](https://github.com/mweimerskirch/lovelace-hacomfoairmqtt/).
