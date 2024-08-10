@@ -137,10 +137,10 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private renderAirTemperature() {
         return html `
-            <div class="hru-temperature-line ${this.entityStateClass(this.outdoorAirTemperature)}">
+            <div class="hru-temperature-line ${this.entityStateClass(this.outdoorAirTemperature)}" .entity=${this.outdoorAirTemperature} @click=${this.moreInfo}>
                 <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.renderTemperature(this.outdoorAirTemperature)}
             </div>
-            <div class="hru-temperature-line ${this.entityStateClass(this.indoorAirTemperature)}">
+            <div class="hru-temperature-line ${this.entityStateClass(this.indoorAirTemperature)}" .entity=${this.indoorAirTemperature} @click=${this.moreInfo}>
                 <ha-icon icon="mdi:arrow-left-thin"></ha-icon> ${this.renderTemperature(this.indoorAirTemperature)}
             </div>
         `;

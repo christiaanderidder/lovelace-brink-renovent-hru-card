@@ -2304,10 +2304,10 @@ class $a399cc6bbb0eb26a$export$4e8be944e36a02b4 extends (0, $ab210b2da7b39b9d$ex
     }
     renderAirTemperature() {
         return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
-            <div class="hru-temperature-line ${this.entityStateClass(this.outdoorAirTemperature)}">
+            <div class="hru-temperature-line ${this.entityStateClass(this.outdoorAirTemperature)}" .entity=${this.outdoorAirTemperature} @click=${this.moreInfo}>
                 <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.renderTemperature(this.outdoorAirTemperature)}
             </div>
-            <div class="hru-temperature-line ${this.entityStateClass(this.indoorAirTemperature)}">
+            <div class="hru-temperature-line ${this.entityStateClass(this.indoorAirTemperature)}" .entity=${this.indoorAirTemperature} @click=${this.moreInfo}>
                 <ha-icon icon="mdi:arrow-left-thin"></ha-icon> ${this.renderTemperature(this.indoorAirTemperature)}
             </div>
         `;
