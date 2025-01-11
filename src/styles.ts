@@ -43,7 +43,7 @@ export const styles = css`
         gap: 10px;
     }
 
-    .hru-sensors, .hru-fan-modes, .hru-zones {
+    .hru-fan-modes, .hru-zones {
         display: flex;
         justify-content: space-around;
         width: 100%;
@@ -51,7 +51,13 @@ export const styles = css`
     }
 
     .hru-zones .hru-zone-line {
+        --mdc-icon-size: 18px;
         cursor: pointer;
+        margin: 5px 0;
+    }
+
+    .hru-zones .hru-zone-line [ha-icon] {
+        margin-top: -10px;
     }
 
     .state-focus {

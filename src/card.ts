@@ -32,6 +32,7 @@ interface Config extends LovelaceCardConfig {
     outdoorAirTemperatureEntity: string;
     indoorAirTemperatureEntity: string;
     bypassValvePositionEntity: string;
+    airFlowEntity: string;
     airFilterEntity: string;
     co2Level1Entity: string;
     co2Level2Entity: string;
@@ -49,6 +50,7 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private outdoorAirTemperature: HassEntity;
     @state() private indoorAirTemperature: HassEntity;
     @state() private bypassValvePosition: HassEntity;
+    @state() private airFlow: HassEntity;
     @state() private airFilter: HassEntity;
 
     // CO2 demand mode sensors
@@ -60,11 +62,11 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private ha;
     private fanModes = [
-        { value: "Auto", icon: "mdi:fan-auto" },
-        { value: "Holiday", icon: "mdi:fan-off" },
-        { value: "Reduced", icon: "mdi:fan-speed-1" },
-        { value: "Normal", icon: "mdi:fan-speed-2" },
-        { value: "High", icon: "mdi:fan-speed-3" }
+        { value: "Auto", icon: "mdi:fan-auto", canOverride: true, },
+        { value: "Holiday", icon: "mdi:fan-off", canOverride: false },
+        { value: "Reduced", icon: "mdi:fan-speed-1", canOverride: false },
+        { value: "Normal", icon: "mdi:fan-speed-2", canOverride: true },
+        { value: "High", icon: "mdi:fan-speed-3", canOverride: true }
     ];
 
     public static styles = styles;
@@ -76,6 +78,7 @@ export class BrinkRenoventHruCard extends LitElement {
             indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
             outdoorAirTemperatureEntity: "sensor.ebusd_excellent400_outsidetemperature",
             bypassValvePositionEntity: "sensor.ebusd_excellent400_bypassstatus",
+            airFlowEntity: "sensor.renovent_excellent_400_hru_exhaustflowsetting",
             airFilterEntity: "sensor.ebusd_excellent400_filternotification",
             zoneValvePositionEntity: "sensor.ebusd_zonevalve_valveposition_zone",
             co2Level1Entity: "number.ebusd_excellent400_co2sensor1level",
@@ -96,6 +99,7 @@ export class BrinkRenoventHruCard extends LitElement {
         this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
         this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
         this.bypassValvePosition = hass.states[this.config.bypassValvePositionEntity];
+        this.airFlow = hass.states[this.config.airFlowEntity];
         this.airFilter = hass.states[this.config.airFilterEntity];
 
         this.zoneValvePosition = hass.states[this.config.zoneValvePositionEntity];
@@ -107,7 +111,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
     public render() {
         return html`
-            <ha-card header="Renovent HRU">
+            <ha-card>
                 <div class="card-content hru">
                     <div class="hru-house">
                         <div class="hru-house-roof">
@@ -125,7 +129,6 @@ export class BrinkRenoventHruCard extends LitElement {
                         </div>
                         <div class="hru-house-body">
                             <div class="hru-temperature">${this.renderAirTemperature()}</div>
-                            <div class="hru-sensors">${this.renderSensors()}</div>
                             <div class="hru-zones">${this.renderZones()}</div>
                             <div class="hru-fan-modes">${this.renderFanModes()}</div>
                         </div>
@@ -157,7 +160,13 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private renderZones() {
         return html`
-            <div>${this.renderZoneValvePosition(this.zoneValvePosition)}</div>
+            <div>
+            
+                ${this.renderZoneValvePosition(this.zoneValvePosition)}
+                ${this.renderAirFlow(this.airFlow)}
+                ${this.renderBypassValvePosition(this.bypassValvePosition)}
+                ${this.renderAirFilterState(this.bypassValvePosition)}
+            </div>
             <div>
                 ${this.renderCO2Level(this.co2Level1)}
                 ${this.renderCO2Level(this.co2Level2)}
@@ -172,7 +181,37 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:fan"></ha-icon> ${entity.state}
+                <ha-icon icon="mdi:home"></ha-icon> ${entity.state}
+            </div>
+        `;
+    }
+
+    private renderAirFlow(entity: HassEntity) {
+        if (!entity) return;
+
+        return html`
+            <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
+                <ha-icon icon="mdi:weather-windy"></ha-icon> ${entity.state}${entity.attributes.unit_of_measurement}
+            </div>
+        `;
+    }
+
+    public renderBypassValvePosition(entity: HassEntity) {
+        if (!entity) return;
+
+        return html`
+            <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
+                <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-icon> ${entity.state}
+            </div>
+        `;
+    }
+
+    public renderAirFilterState(entity: HassEntity) {
+        if (!entity) return;
+
+        return html`
+            <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
+                <ha-icon icon="mdi:air-filter" class=${this.airFilterStateClass()}></ha-icon> ${entity.state}
             </div>
         `;
     }
@@ -195,8 +234,9 @@ export class BrinkRenoventHruCard extends LitElement {
                 <mwc-icon-button
                     .value=${button.value}
                     .entity=${this.fanModeWrite}
-                    @click=${this.setFanMode}>
-                    <ha-icon icon=${button.icon} class=${this.fanModeStateClass(button.value)}></ha-icon>
+                    @click=${this.setFanMode}
+                    .disabled=${!button.canOverride}>
+                    <ha-icon icon=${button.icon} class=${this.fanModeStateClass(button.value, button.canOverride)}></ha-icon>
                 </mwc-icon-button>
             `);
     }
@@ -213,21 +253,10 @@ export class BrinkRenoventHruCard extends LitElement {
         this.ha.callService(domain, "select_option", { option: value }, { entity_id: entity.entity_id });
     }
 
-    private fanModeStateClass(state) {
-        if (!this.fanModeRead) return "state-unavailable";
+    private fanModeStateClass(state, canOverride) {
+        if (!this.fanModeRead || !canOverride) return "state-unavailable";
         if (this.fanModeRead.state === state) return "state-focus";
         return "state-available";
-    }
-
-    private renderSensors() {
-        return html`
-            <mwc-icon-button .entity=${this.airFilter} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:air-filter" class=${this.airFilterStateClass()}></ha-icon>
-            </mwc-icon-button>
-            <mwc-icon-button .entity=${this.bypassValvePosition} @click=${this.moreInfo}>
-                <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-icon>
-            </mwc-icon-button>
-        `;
     }
 
     private airFilterStateClass() {
