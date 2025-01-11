@@ -14,12 +14,13 @@ import {
     mdiMoleculeCo2,
     mdiValve,
     mdiValveOpen,
-    mdiValveClosed
+    mdiValveClosed,
+    mdiGauge
 } from "@mdi/js";
 import { customElement, state } from 'lit/decorators';
 import { styles } from "./styles";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig, MoreInfoActionConfig, handleAction } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig, MoreInfoActionConfig, NavigateActionConfig, handleAction } from "custom-card-helpers";
 
 declare global {
     interface Window {
@@ -62,6 +63,8 @@ export class BrinkRenoventHruCard extends LitElement {
 
     @state() private config: Config;
 
+    @state() private deviceId : string
+
     @state() private fanModeRead: HassEntity;
     @state() private fanModeWrite: HassEntity;
     @state() private outdoorAirTemperature: HassEntity;
@@ -90,6 +93,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
     public static getStubConfig() {
         return {
+            deviceId: "",
             fanModeReadEntity: "sensor.ebusd_excellent400_fanmode",
             fanModeWriteEntity: "select.ebusd_excellent400_fanmode",
             indoorAirTemperatureEntity: "sensor.ebusd_excellent400_insidetemperature",
@@ -111,6 +115,9 @@ export class BrinkRenoventHruCard extends LitElement {
 
     public set hass(hass: HomeAssistant) {
         this.ha = hass;
+
+        this.deviceId = this.config.deviceId;
+
         this.fanModeRead = hass.states[this.config.fanModeReadEntity];
         this.fanModeWrite = hass.states[this.config.fanModeWriteEntity];
         this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
@@ -188,6 +195,7 @@ export class BrinkRenoventHruCard extends LitElement {
                 ${this.renderCO2Level(this.co2Level2)}
                 ${this.renderCO2Level(this.co2Level3)}
                 ${this.renderCO2Level(this.co2Level4)}
+                ${this.renderDetails(this.deviceId)}
             </div>
         `;
     }
@@ -217,7 +225,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-svg-icon .path=${mdiWeatherWindy} class=${this.bypassValveStateClass()}></ha-svg-icon> ${entity.state}
+                <ha-svg-icon .path=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-svg-icon> ${entity.state}
             </div>
         `;
     }
@@ -238,6 +246,16 @@ export class BrinkRenoventHruCard extends LitElement {
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
                 <ha-svg-icon .path=${mdiMoleculeCo2}></ha-svg-icon> ${entity.state}${entity.attributes.unit_of_measurement}
+            </div>
+        `;
+    }
+
+    private renderDetails(deviceId: string) {
+        if (!deviceId) return;
+
+        return html`
+            <div class="hru-zone-line" @click=${() => this.navigate(`/config/devices/device/${deviceId}`)}>
+                <ha-svg-icon .path=${mdiGauge}></ha-svg-icon> View device
             </div>
         `;
     }
@@ -305,6 +323,17 @@ export class BrinkRenoventHruCard extends LitElement {
                 entity: entityId,
                 action: "more-info"
             } as MoreInfoActionConfig
+        }
+        handleAction(this, this.ha, config, "tap");
+    }
+
+    private navigate(path: string) {
+        console.log(path);
+        var config = {
+            tap_action: {
+                navigation_path: path,
+                action: "navigate"
+            } as NavigateActionConfig
         }
         handleAction(this, this.ha, config, "tap");
     }
