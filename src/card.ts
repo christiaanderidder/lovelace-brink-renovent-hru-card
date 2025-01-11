@@ -1,4 +1,21 @@
 import { LitElement, html } from "lit"
+import {
+    mdiFan,
+    mdiFanAuto,
+    mdiFanOff,
+    mdiFanSpeed1,
+    mdiFanSpeed2,
+    mdiFanSpeed3,
+    mdiArrowRightThin,
+    mdiArrowLeftThin,
+    mdiHome,
+    mdiWeatherWindy,
+    mdiAirFilter,
+    mdiMoleculeCo2,
+    mdiValve,
+    mdiValveOpen,
+    mdiValveClosed
+} from "@mdi/js";
 import { customElement, state } from 'lit/decorators';
 import { styles } from "./styles";
 import { HassEntity } from "home-assistant-js-websocket";
@@ -62,11 +79,11 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private ha;
     private fanModes = [
-        { value: "Auto", icon: "mdi:fan-auto", canOverride: true, },
-        { value: "Holiday", icon: "mdi:fan-off", canOverride: false },
-        { value: "Reduced", icon: "mdi:fan-speed-1", canOverride: false },
-        { value: "Normal", icon: "mdi:fan-speed-2", canOverride: true },
-        { value: "High", icon: "mdi:fan-speed-3", canOverride: true }
+        { value: "Auto", icon: mdiFan, canOverride: true, },
+        { value: "Holiday", icon: mdiFanOff, canOverride: false },
+        { value: "Reduced", icon: mdiFanSpeed1, canOverride: false },
+        { value: "Normal", icon: mdiFanSpeed2, canOverride: true },
+        { value: "High", icon: mdiFanSpeed3, canOverride: true }
     ];
 
     public static styles = styles;
@@ -141,10 +158,10 @@ export class BrinkRenoventHruCard extends LitElement {
     private renderAirTemperature() {
         return html `
             <div class="hru-temperature-line ${this.entityStateClass(this.outdoorAirTemperature)}" .entity=${this.outdoorAirTemperature} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:arrow-right-thin"></ha-icon> ${this.renderTemperature(this.outdoorAirTemperature)}
+                <ha-svg-icon .path=${mdiArrowRightThin}></ha-svg-icon> ${this.renderTemperature(this.outdoorAirTemperature)}
             </div>
             <div class="hru-temperature-line ${this.entityStateClass(this.indoorAirTemperature)}" .entity=${this.indoorAirTemperature} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:arrow-left-thin"></ha-icon> ${this.renderTemperature(this.indoorAirTemperature)}
+                <ha-svg-icon .path=${mdiArrowLeftThin}></ha-svg-icon> ${this.renderTemperature(this.indoorAirTemperature)}
             </div>
         `;
     }
@@ -161,11 +178,10 @@ export class BrinkRenoventHruCard extends LitElement {
     private renderZones() {
         return html`
             <div>
-            
                 ${this.renderZoneValvePosition(this.zoneValvePosition)}
                 ${this.renderAirFlow(this.airFlow)}
                 ${this.renderBypassValvePosition(this.bypassValvePosition)}
-                ${this.renderAirFilterState(this.bypassValvePosition)}
+                ${this.renderAirFilterState(this.airFilter)}
             </div>
             <div>
                 ${this.renderCO2Level(this.co2Level1)}
@@ -181,7 +197,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:home"></ha-icon> ${entity.state}
+                <ha-svg-icon .path=${mdiHome}></ha-svg-icon> ${entity.state}
             </div>
         `;
     }
@@ -191,7 +207,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:weather-windy"></ha-icon> ${entity.state}${entity.attributes.unit_of_measurement}
+                <ha-svg-icon .path=${mdiWeatherWindy}></ha-svg-icon> ${entity.state}${entity.attributes.unit_of_measurement}
             </div>
         `;
     }
@@ -201,7 +217,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon=${this.bypassValveIcon()} class=${this.bypassValveStateClass()}></ha-icon> ${entity.state}
+                <ha-svg-icon .path=${mdiWeatherWindy} class=${this.bypassValveStateClass()}></ha-svg-icon> ${entity.state}
             </div>
         `;
     }
@@ -211,7 +227,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:air-filter" class=${this.airFilterStateClass()}></ha-icon> ${entity.state}
+                <ha-svg-icon .path=${mdiAirFilter} class=${this.airFilterStateClass()}></ha-svg-icon> ${entity.state}
             </div>
         `;
     }
@@ -221,7 +237,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return html`
             <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
-                <ha-icon icon="mdi:molecule-co2"></ha-icon> ${entity.state}${entity.attributes.unit_of_measurement}
+                <ha-svg-icon .path=${mdiMoleculeCo2}></ha-svg-icon> ${entity.state}${entity.attributes.unit_of_measurement}
             </div>
         `;
     }
@@ -231,13 +247,15 @@ export class BrinkRenoventHruCard extends LitElement {
 
         return this.fanModes.map((button) =>
             html `
-                <mwc-icon-button
+                <ha-icon-button
                     .value=${button.value}
                     .entity=${this.fanModeWrite}
                     @click=${this.setFanMode}
-                    .disabled=${!button.canOverride}>
-                    <ha-icon icon=${button.icon} class=${this.fanModeStateClass(button.value, button.canOverride)}></ha-icon>
-                </mwc-icon-button>
+                    .disabled=${!button.canOverride}
+                    .path=${button.icon}
+                    class=${this.fanModeStateClass(button.value, button.canOverride)}
+                    >
+                </ha-icon-button>
             `);
     }
 
@@ -267,10 +285,10 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private bypassValveIcon() {
-        if (!this.bypassValvePosition) return "mdi:valve";
-        if (this.bypassValvePosition.state === "Open") return "mdi:valve-open";
-        if (this.bypassValvePosition.state === "Closed") return "mdi:valve-closed";
-        return "mdi:valve";
+        if (!this.bypassValvePosition) return mdiValve;
+        if (this.bypassValvePosition.state === "Open") return mdiValveOpen;
+        if (this.bypassValvePosition.state === "Closed") return mdiValveClosed;
+        return mdiValve;
     }
 
     private bypassValveStateClass() {

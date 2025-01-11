@@ -81,10 +81,6 @@ export const styles = css`
         left: -15px;
     }
 
-    ha-icon {
-        padding-top: -10px;
-    }
-
     .hru-temperature .hru-temperature-line {
         border: 3px solid var(--primary-text-color);
         border-left: 0 none;
@@ -96,5 +92,9 @@ export const styles = css`
         align-items: center;
         justify-content: center;
         width: 60px;
+    }
+
+    ha-icon-button ha-icon {
+        vertical-align: text-bottom;
     }
 `
