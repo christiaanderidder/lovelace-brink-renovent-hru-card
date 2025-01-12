@@ -1,6 +1,5 @@
 import { LitElement, html } from "lit"
 import {
-    mdiFan,
     mdiFanAuto,
     mdiFanOff,
     mdiFanSpeed1,
