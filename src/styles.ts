@@ -34,7 +34,7 @@ export const styles = css`
         background: var(--card-background-color);
         border-top: 0 none;
         min-height: 120px;
-        padding: 5px 60px;
+        //padding: 5px 30px 5px 60px;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -43,10 +43,11 @@ export const styles = css`
         gap: 10px;
     }
 
-    .hru-fan-modes, .hru-zones {
+    .hru-zones {
         display: flex;
-        justify-content: space-around;
-        width: 100%;
+        justify-content: space-evenly;
+        width: calc(100% - 60px - 5px);
+        margin: 0 5px 0 60px;
         flex-shrink: 0;
     }
 
@@ -58,6 +59,15 @@ export const styles = css`
 
     .hru-zones .hru-zone-line [ha-icon] {
         margin-top: -10px;
+    }
+
+    .hru-fan-modes {
+        display: flex;
+        justify-content: space-evenly;
+        flex-shrink: 0;
+        width: 100%;
+        align-items: center;
+        margin: 5px 0;
     }
 
     .state-focus {
