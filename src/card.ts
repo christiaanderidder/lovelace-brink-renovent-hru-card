@@ -32,26 +32,27 @@ window.customCards.push({
 @customElement('brink-renovent-hru-card')
 export class BrinkRenoventHruCard extends LitElement {
 
-    @state() private config: Config;
+    @state() private config?: Config;
 
-    @state() private deviceId : string
+    @state() private deviceId? : string
 
-    @state() private fanModeRead: HassEntity;
-    @state() private fanModeWrite: HassEntity;
-    @state() private outdoorAirTemperature: HassEntity;
-    @state() private indoorAirTemperature: HassEntity;
-    @state() private bypassValvePosition: HassEntity;
-    @state() private airFlow: HassEntity;
-    @state() private airFilter: HassEntity;
+    @state() private fanModeRead?: HassEntity;
+    @state() private fanModeWrite?: HassEntity;
+    @state() private outdoorAirTemperature?: HassEntity;
+    @state() private indoorAirTemperature?: HassEntity;
+    @state() private bypassValvePosition?: HassEntity;
+    @state() private airFlow?: HassEntity;
+    @state() private airFilter?: HassEntity;
 
     // CO2 demand mode sensors
-    @state() private zoneValvePosition: HassEntity;
-    @state() private co2Level1: HassEntity;
-    @state() private co2Level2: HassEntity;
-    @state() private co2Level3: HassEntity;
-    @state() private co2Level4: HassEntity;
+    @state() private zoneValvePosition?: HassEntity;
+    @state() private co2Level1?: HassEntity;
+    @state() private co2Level2?: HassEntity;
+    @state() private co2Level3?: HassEntity;
+    @state() private co2Level4?: HassEntity;
 
-    private ha : HomeAssistant;
+    private ha? : HomeAssistant;
+
     private fanModes = [
         { value: "Auto", icon: mdiFanAuto, canOverride: true, },
         { value: "Holiday", icon: mdiFanOff, canOverride: false },
@@ -85,6 +86,8 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     public set hass(hass: HomeAssistant) {
+        if(!this.config) return;
+
         this.ha = hass;
 
         this.deviceId = this.config.deviceId;
@@ -144,11 +147,11 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    private entityStateClass(entity: HassEntity) {
+    private entityStateClass(entity?: HassEntity) {
         return entity ? "state-available" : "state-unavailable";
     }
 
-    private renderTemperature(entity: HassEntity) {
+    private renderTemperature(entity?: HassEntity) {
         if (!entity) return "0.0";
         return entity.state + entity.attributes.unit_of_measurement;
     }
@@ -171,7 +174,7 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    private renderZoneValvePosition(entity: HassEntity) {
+    private renderZoneValvePosition(entity?: HassEntity) {
         if (!entity) return;
 
         return html`
@@ -181,7 +184,7 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    private renderAirFlow(entity: HassEntity) {
+    private renderAirFlow(entity?: HassEntity) {
         if (!entity) return;
 
         return html`
@@ -191,7 +194,7 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    public renderBypassValvePosition(entity: HassEntity) {
+    public renderBypassValvePosition(entity?: HassEntity) {
         if (!entity) return;
 
         return html`
@@ -201,7 +204,7 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    public renderAirFilterState(entity: HassEntity) {
+    public renderAirFilterState(entity?: HassEntity) {
         if (!entity) return;
 
         return html`
@@ -211,7 +214,7 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    private renderCO2Level(entity: HassEntity) {
+    private renderCO2Level(entity?: HassEntity) {
         if (!entity) return;
 
         return html`
@@ -221,8 +224,8 @@ export class BrinkRenoventHruCard extends LitElement {
         `;
     }
 
-    private renderDetails(deviceId: string) {
-        if (!deviceId || !this.ha.user.is_admin) return;
+    private renderDetails(deviceId?: string) {
+        if (!deviceId || this.ha && !this.ha.user.is_admin) return;
 
         return html`
             <div class="hru-zone-line" @click=${() => this.navigate(`/config/devices/device/${deviceId}`)}>
@@ -249,18 +252,18 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private setFanMode(ev: ButtonEvent) {
+        if (!this.ha) return;
+
         var entity = ev.currentTarget.entity;
         var value = ev.currentTarget.value;
 
         var domain = entity.entity_id.slice(0, entity.entity_id.indexOf('.'));
         if (domain !== "select" && domain !== "input_select") return;
 
-        console.log("setFanMode", domain, entity, value);
-
         this.ha.callService(domain, "select_option", { option: value }, { entity_id: entity.entity_id });
     }
 
-    private fanModeStateClass(state, canOverride) {
+    private fanModeStateClass(state: string, canOverride: boolean) {
         if (!this.fanModeRead || !canOverride) return "state-unavailable";
         if (this.fanModeRead.state === state) return "state-focus";
         return "state-available";
@@ -287,6 +290,8 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private moreInfo(ev: ButtonEvent) {
+        if (!this.ha) return;
+
         var entityId = ev.currentTarget.entity.entity_id;
         var config = {
             entity: entityId,
@@ -299,7 +304,8 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private navigate(path: string) {
-        console.log(path);
+        if (!this.ha) return;
+
         var config = {
             tap_action: {
                 navigation_path: path,
