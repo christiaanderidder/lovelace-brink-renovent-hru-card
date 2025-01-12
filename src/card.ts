@@ -251,7 +251,7 @@ export class BrinkRenoventHruCard extends LitElement {
     }
 
     private renderDetails(deviceId: string) {
-        if (!deviceId) return;
+        if (!deviceId || !this.ha.user.is_admin) return;
 
         return html`
             <div class="hru-zone-line" @click=${() => this.navigate(`/config/devices/device/${deviceId}`)}>
