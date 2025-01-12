@@ -19,13 +19,8 @@ import {
 import { customElement, state } from 'lit/decorators';
 import { styles } from "./styles";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig, MoreInfoActionConfig, NavigateActionConfig, handleAction } from "custom-card-helpers";
-
-declare global {
-    interface Window {
-        customCards: Array<Object>;
-    }
-}
+import { HomeAssistant, MoreInfoActionConfig, NavigateActionConfig, handleAction } from "custom-card-helpers";
+import { ButtonEvent, Config } from "./types";
 
 window.customCards = window.customCards || [];
 window.customCards.push({
@@ -33,29 +28,6 @@ window.customCards.push({
     name: "Brink Renovent HRU card",
     description: "A custom card for the Brink Renovent HRU"
 });
-
-interface ButtonEvent extends MouseEvent {
-    currentTarget: ButtonEventTarget
-}
-
-interface ButtonEventTarget extends EventTarget {
-    entity: HassEntity,
-    value?: string
-}
-
-interface Config extends LovelaceCardConfig {
-    fanModeReadEntity: string;
-    fanModeWriteEntity: string;
-    outdoorAirTemperatureEntity: string;
-    indoorAirTemperatureEntity: string;
-    bypassValvePositionEntity: string;
-    airFlowEntity: string;
-    airFilterEntity: string;
-    co2Level1Entity: string;
-    co2Level2Entity: string;
-    co2Level3Entity: string;
-    co2Level4Entity: string;
-}
 
 @customElement('brink-renovent-hru-card')
 export class BrinkRenoventHruCard extends LitElement {
@@ -79,7 +51,7 @@ export class BrinkRenoventHruCard extends LitElement {
     @state() private co2Level3: HassEntity;
     @state() private co2Level4: HassEntity;
 
-    private ha;
+    private ha : HomeAssistant;
     private fanModes = [
         { value: "Auto", icon: mdiFanAuto, canOverride: true, },
         { value: "Holiday", icon: mdiFanOff, canOverride: false },
