@@ -22,7 +22,7 @@ export default {
   input: "src/card.ts",
   output: [
     {
-      file: "dist/card.js",
+      file: "dist/brink-renovent-hru-card.js",
       format: "iife",
       name: "version",
       plugins: [terser()],

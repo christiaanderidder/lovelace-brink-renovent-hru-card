@@ -1,6 +1,6 @@
 {
     "name": "Brink Renovent HRU card",
     "render_readme": true,
-    "filename": "card.js",
+    "filename": "brink-renovent-hru-card.js",
     "content_in_root": false
 }
