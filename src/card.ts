@@ -284,10 +284,10 @@ export class BrinkRenoventHruCard extends LitElement {
   private setFanMode(ev: ButtonEvent) {
     if (!this.ha) return;
 
-    var entity = ev.currentTarget.entity;
-    var value = ev.currentTarget.value;
+    const entity = ev.currentTarget.entity;
+    const value = ev.currentTarget.value;
 
-    var domain = entity.entity_id.slice(0, entity.entity_id.indexOf('.'));
+    const domain = entity.entity_id.slice(0, entity.entity_id.indexOf('.'));
     if (domain !== 'select' && domain !== 'input_select') return;
 
     this.ha.callService(
@@ -327,8 +327,8 @@ export class BrinkRenoventHruCard extends LitElement {
   private moreInfo(ev: ButtonEvent) {
     if (!this.ha) return;
 
-    var entityId = ev.currentTarget.entity.entity_id;
-    var config = {
+    const entityId = ev.currentTarget.entity.entity_id;
+    const config = {
       entity: entityId,
       tap_action: {
         entity: entityId,
@@ -341,7 +341,7 @@ export class BrinkRenoventHruCard extends LitElement {
   private navigate(path: string) {
     if (!this.ha) return;
 
-    var config = {
+    const config = {
       tap_action: {
         navigation_path: path,
         action: 'navigate',
