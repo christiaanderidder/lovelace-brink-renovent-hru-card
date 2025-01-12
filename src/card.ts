@@ -82,7 +82,7 @@ export class BrinkRenoventHruCard extends LitElement {
 
     private ha;
     private fanModes = [
-        { value: "Auto", icon: mdiFan, canOverride: true, },
+        { value: "Auto", icon: mdiFanAuto, canOverride: true, },
         { value: "Holiday", icon: mdiFanOff, canOverride: false },
         { value: "Reduced", icon: mdiFanSpeed1, canOverride: false },
         { value: "Normal", icon: mdiFanSpeed2, canOverride: true },
