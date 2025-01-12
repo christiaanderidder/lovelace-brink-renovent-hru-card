@@ -1,9 +1,7 @@
 {
-  "source": "src/card.ts",
-  "module": "dist/card.js",
   "scripts": {
-    "watch": "parcel watch",
-    "build": "parcel build"
+    "build": "rollup -c",
+    "watch": "rollup -c --watch"
   },
   "targets": {
     "module": {
@@ -11,14 +9,20 @@
     }
   },
   "devDependencies": {
-    "@parcel/validator-typescript": "^2.13.3",
-    "parcel": "^2.13.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "rollup": "^4.30.1",
+    "rollup-plugin-filesize": "^10.0.0",
+    "rollup-plugin-serve": "^1.1.1",
+    "rollup-plugin-styler": "^1.8.0",
+    "sass": "^1.83.1",
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@dermotduffy/custom-card-helpers": "^1.9.1",
     "@mdi/js": "^7.4.47",
-    "@swc/helpers": "^0.5.11",
-    "custom-card-helpers": "^1.9.0",
     "home-assistant-js-websocket": "^9.4.0",
     "lit": "^3.1.4",
     "lit-element": "^4.0.6"

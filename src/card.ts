@@ -1,4 +1,4 @@
-import { LitElement, html } from "lit"
+import { LitElement, CSSResultGroup, html, unsafeCSS } from "lit"
 import {
     mdiFanAuto,
     mdiFanOff,
@@ -16,11 +16,11 @@ import {
     mdiValveClosed,
     mdiGauge
 } from "@mdi/js";
-import { customElement, state } from 'lit/decorators';
-import { styles } from "./styles";
+import { customElement, state } from 'lit/decorators.js';
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, MoreInfoActionConfig, NavigateActionConfig, handleAction } from "custom-card-helpers";
+import { HomeAssistant, MoreInfoActionConfig, NavigateActionConfig, handleAction } from "@dermotduffy/custom-card-helpers";
 import { ButtonEvent, Config } from "./types";
+import styles from './styles.scss';
 
 window.customCards = window.customCards || [];
 window.customCards.push({
@@ -61,7 +61,9 @@ export class BrinkRenoventHruCard extends LitElement {
         { value: "High", icon: mdiFanSpeed3, canOverride: true }
     ];
 
-    public static styles = styles;
+    public static get styles(): CSSResultGroup {
+        return unsafeCSS(styles);
+    }
 
     public static getStubConfig() {
         return {

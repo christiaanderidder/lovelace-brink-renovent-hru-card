@@ -1,4 +1,4 @@
-import { LovelaceCardConfig } from "custom-card-helpers";
+import { LovelaceCardConfig } from "@dermotduffy/custom-card-helpers";
 import { HassEntity } from "home-assistant-js-websocket";
 
 export interface ButtonEvent extends MouseEvent {
