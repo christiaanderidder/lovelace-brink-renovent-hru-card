@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "isolatedModules": true,
-    "target": "es2021",
+    "target": "es2023",
+    "lib": ["es2023", "dom"],
     "strict": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "useDefineForClassFields": false,
-  }
+  },
+  "include": ["src/**/*.ts"]
 }
