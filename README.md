@@ -1,6 +1,7 @@
 # Brink Renovent HRU card
 This repository contains a custom Home Assistant card for the Brink Renovent heat recuperation unit (HRU / WTW).
-The card is tested on a Brink Renovent 400, but should work for other Brink Renovent systems as well.
+
+The card was tested on a Brink Renovent 400, but should work for other Brink Renovent systems as well.
 
 ![Card](/card.png?raw=true)
 
