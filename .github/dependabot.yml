@@ -8,7 +8,7 @@ updates:
       time: "10:00"
       timezone: "Europe/Amsterdam"
     groups:
-      nuget:
+      npm:
         patterns:
           - "*"
         update-types:
