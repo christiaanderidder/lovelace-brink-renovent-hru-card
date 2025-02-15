@@ -21,7 +21,7 @@
     "rollup": "^4.34.7",
     "rollup-plugin-filesize": "^10.0.0",
     "rollup-plugin-serve": "^3.0.0",
-    "rollup-plugin-styler": "^1.8.0",
+    "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.85.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0"
