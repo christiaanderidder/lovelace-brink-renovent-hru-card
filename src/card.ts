@@ -49,7 +49,8 @@ export class BrinkRenoventHruCard extends LitElement {
   @state() private fanModeWrite?: HassEntity;
   @state() private outdoorAirTemperature?: HassEntity;
   @state() private indoorAirTemperature?: HassEntity;
-  @state() private bypassValvePosition?: HassEntity;
+  @state() private bypassValvePositionRead?: HassEntity;
+  @state() private bypassValvePositionWrite?: HassEntity;
   @state() private airFlow?: HassEntity;
   @state() private airFilter?: HassEntity;
 
@@ -81,7 +82,8 @@ export class BrinkRenoventHruCard extends LitElement {
       fanModeWriteEntity: 'select.ebusd_excellent400_fanmode',
       indoorAirTemperatureEntity: 'sensor.ebusd_excellent400_insidetemperature',
       outdoorAirTemperatureEntity: 'sensor.ebusd_excellent400_outsidetemperature',
-      bypassValvePositionEntity: 'sensor.ebusd_excellent400_bypassstatus',
+      bypassValvePositionReadEntity: 'sensor.ebusd_excellent400_bypassstatus',
+      bypassValvePositionWriteEntity: 'select.renovent_excellent_400_hru_operationbypassvalve',
       airFlowEntity: 'sensor.renovent_excellent_400_hru_exhaustflowsetting',
       airFilterEntity: 'sensor.ebusd_excellent400_filternotification',
       zoneValvePositionEntity: 'sensor.ebusd_zonevalve_valveposition_zone',
@@ -107,7 +109,10 @@ export class BrinkRenoventHruCard extends LitElement {
     this.fanModeWrite = hass.states[this.config.fanModeWriteEntity];
     this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
     this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
-    this.bypassValvePosition = hass.states[this.config.bypassValvePositionEntity];
+
+    this.bypassValvePositionRead = hass.states[this.config.bypassValvePositionReadEntity];
+    this.bypassValvePositionWrite = hass.states[this.config.bypassValvePositionWriteEntity];
+    
     this.airFlow = hass.states[this.config.airFlowEntity];
     this.airFilter = hass.states[this.config.airFilterEntity];
 
@@ -187,7 +192,7 @@ export class BrinkRenoventHruCard extends LitElement {
     return html`
       <div>
         ${this.renderZoneValvePosition(this.zoneValvePosition)} ${this.renderAirFlow(this.airFlow)}
-        ${this.renderBypassValvePosition(this.bypassValvePosition)}
+        ${this.renderBypassValvePosition(this.bypassValvePositionRead, this.bypassValvePositionWrite)}
         ${this.renderAirFilterState(this.airFilter)}
       </div>
       <div>
@@ -219,8 +224,14 @@ export class BrinkRenoventHruCard extends LitElement {
     `;
   }
 
-  public renderBypassValvePosition(entity?: HassEntity) {
-    if (!entity) return;
+  public renderBypassValvePosition(readEntity?: HassEntity, writeEntity?: HassEntity) {
+    if (!readEntity) return;
+
+    const entity = writeEntity || readEntity
+
+    const actualState = entity.state !== readEntity.state
+      ? html`<span class="state-unavailable"> (${entity.state})</span>`
+      : '';
 
     return html`
       <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
@@ -228,7 +239,8 @@ export class BrinkRenoventHruCard extends LitElement {
           .path=${this.bypassValveIcon()}
           class=${this.bypassValveStateClass()}
         ></ha-svg-icon>
-        ${entity.state}
+        ${readEntity.state}
+        ${actualState}
       </div>
     `;
   }
@@ -333,15 +345,15 @@ export class BrinkRenoventHruCard extends LitElement {
   }
 
   private bypassValveIcon() {
-    if (!this.bypassValvePosition) return mdiValve;
-    if (this.bypassValvePosition.state === 'Open') return mdiValveOpen;
-    if (this.bypassValvePosition.state === 'Closed') return mdiValveClosed;
+    if (!this.bypassValvePositionRead) return mdiValve;
+    if (this.bypassValvePositionRead.state === 'Open') return mdiValveOpen;
+    if (this.bypassValvePositionRead.state === 'Closed') return mdiValveClosed;
     return mdiValve;
   }
 
   private bypassValveStateClass() {
-    if (!this.bypassValvePosition) return 'state-unavailable';
-    if (this.bypassValvePosition.state === 'Error') return 'state-error';
+    if (!this.bypassValvePositionRead) return 'state-unavailable';
+    if (this.bypassValvePositionRead.state === 'Error') return 'state-error';
     return 'state-available';
   }
 
