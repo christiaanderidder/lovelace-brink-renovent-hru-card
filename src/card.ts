@@ -27,6 +27,11 @@ import {
 import { ButtonEvent, Config } from './types';
 import styles from './styles.scss';
 
+console.info(
+	`%cBrink Renovent HRU card`,
+	'color: white; font-weight: bold; background: #03a9f4; padding: 2px 4px;'
+);
+
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'brink-renovent-hru-card',
