@@ -279,7 +279,10 @@ export class BrinkRenoventHruCard extends LitElement {
           @click=${this.setFanMode}
           .disabled=${!button.canOverride}
           .path=${button.icon}
-          class=${this.fanModeStateClass(button.value, button.canOverride)}
+          class=${
+            this.fanModeActiveStateClass(button.value, button.canOverride)
+            .concat(' ', this.fanModeRequestedStateClass(button.value))
+          }
         >
         </ha-icon-button>
       `,
@@ -295,15 +298,28 @@ export class BrinkRenoventHruCard extends LitElement {
     const domain = entity.entity_id.slice(0, entity.entity_id.indexOf('.'));
     if (domain !== 'select' && domain !== 'input_select') return;
 
+    // Optimistically update the requested state
+    if (this.fanModeWrite && value && this.fanModeWrite.state !== value) {
+      this.fanModeWrite.state = value;
+    }
+
     this.ha.callService(
       domain,
       'select_option',
       { option: value },
       { entity_id: entity.entity_id },
     );
+
+    this.requestUpdate();
   }
 
-  private fanModeStateClass(state: string, canOverride: boolean) {
+  private fanModeRequestedStateClass(state: string) {
+    return (this.fanModeWrite && this.fanModeWrite.state === state)
+      ? 'state-requested'
+      : '';
+  }
+
+  private fanModeActiveStateClass(state: string, canOverride: boolean) {
     if (!this.fanModeRead || !canOverride) return 'state-unavailable';
     if (this.fanModeRead.state === state) return 'state-focus';
     return 'state-available';

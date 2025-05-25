@@ -67,6 +67,21 @@
   margin: 5px 0;
 }
 
+.state-requested {
+  position: relative;
+}
+
+.state-requested::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--mdc-theme-primary);
+}
+
 .state-focus {
   color: var(--mdc-theme-primary);
 }
