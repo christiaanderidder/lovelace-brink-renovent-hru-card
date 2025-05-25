@@ -105,22 +105,52 @@ export class BrinkRenoventHruCard extends LitElement {
 
     this.deviceId = this.config.deviceId;
 
-    this.fanModeRead = hass.states[this.config.fanModeReadEntity];
-    this.fanModeWrite = hass.states[this.config.fanModeWriteEntity];
-    this.outdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
-    this.indoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
+    const newFanModeRead = hass.states[this.config.fanModeReadEntity];
+    const newFanModeWrite = hass.states[this.config.fanModeWriteEntity];
+    const newOutdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
+    const newIndoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
+    const newBypassValvePositionRead = hass.states[this.config.bypassValvePositionReadEntity];
+    const newBypassValvePositionWrite = hass.states[this.config.bypassValvePositionWriteEntity];
+    const newAirFlow = hass.states[this.config.airFlowEntity];
+    const newAirFilter = hass.states[this.config.airFilterEntity];
+    const newZoneValvePosition = hass.states[this.config.zoneValvePositionEntity];
+    const newCo2Level1 = hass.states[this.config.co2Level1Entity];
+    const newCo2Level2 = hass.states[this.config.co2Level2Entity];
+    const newCo2Level3 = hass.states[this.config.co2Level3Entity];
+    const newCo2Level4 = hass.states[this.config.co2Level4Entity];
 
-    this.bypassValvePositionRead = hass.states[this.config.bypassValvePositionReadEntity];
-    this.bypassValvePositionWrite = hass.states[this.config.bypassValvePositionWriteEntity];
-    
-    this.airFlow = hass.states[this.config.airFlowEntity];
-    this.airFilter = hass.states[this.config.airFilterEntity];
+    if(this.fanModeRead?.state !== newFanModeRead?.state
+      || this.fanModeWrite?.state !== newFanModeWrite?.state
+      || this.outdoorAirTemperature?.state !== newOutdoorAirTemperature?.state
+      || this.indoorAirTemperature?.state !== newIndoorAirTemperature?.state
+      || this.bypassValvePositionRead?.state !== newBypassValvePositionRead?.state
+      || this.bypassValvePositionWrite?.state !== newBypassValvePositionWrite?.state
+      || this.airFlow?.state !== newAirFlow?.state
+      || this.airFilter?.state !== newAirFilter?.state
+      || this.zoneValvePosition?.state !== newZoneValvePosition?.state
+      || this.co2Level1?.state !== newCo2Level1?.state
+      || this.co2Level2?.state !== newCo2Level2?.state
+      || this.co2Level3?.state !== newCo2Level3?.state
+      || this.co2Level4?.state !== newCo2Level4?.state
+    ) {
+        // LitElement somehow does not detect changes in the state of entities, and therefore does not update the UI.
+        // For the time being, we force an update when any of the entities change.
+        this.requestUpdate();
+      }
 
-    this.zoneValvePosition = hass.states[this.config.zoneValvePositionEntity];
-    this.co2Level1 = hass.states[this.config.co2Level1Entity];
-    this.co2Level2 = hass.states[this.config.co2Level2Entity];
-    this.co2Level3 = hass.states[this.config.co2Level3Entity];
-    this.co2Level4 = hass.states[this.config.co2Level4Entity];
+    this.fanModeRead = newFanModeRead;
+    this.fanModeWrite = newFanModeWrite;
+    this.outdoorAirTemperature = newOutdoorAirTemperature;
+    this.indoorAirTemperature = newIndoorAirTemperature;
+    this.bypassValvePositionRead = newBypassValvePositionRead;
+    this.bypassValvePositionWrite = newBypassValvePositionWrite;
+    this.airFlow = newAirFlow;
+    this.airFilter = newAirFilter;
+    this.zoneValvePosition = newZoneValvePosition;
+    this.co2Level1 = newCo2Level1;
+    this.co2Level2 = newCo2Level2;
+    this.co2Level3 = newCo2Level3;
+    this.co2Level4 = newCo2Level4;
   }
 
   public render() {
