@@ -29,6 +29,9 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           file: dist/brink-renovent-hru-card.js
+      
+      - name: Wait for GitHub to process release asset
+        run: sleep 15
 
       - name: HACS validation
         uses: "hacs/action@main"
