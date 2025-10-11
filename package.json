@@ -12,7 +12,7 @@
   "devDependencies": {
     "@eslint/js": "^9.37.0",
     "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-node-resolve": "^16.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",
     "eslint": "^9.37.0",
@@ -24,7 +24,7 @@
     "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.93.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.45.0"
+    "typescript-eslint": "^8.46.0"
   },
   "dependencies": {
     "@dermotduffy/custom-card-helpers": "^1.9.1",
