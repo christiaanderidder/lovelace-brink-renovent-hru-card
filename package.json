@@ -14,7 +14,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.4",
+    "@rollup/plugin-typescript": "^12.3.0",
     "eslint": "^9.38.0",
     "globals": "^16.4.0",
     "prettier": "^3.6.2",
@@ -24,7 +24,7 @@
     "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.93.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.1"
+    "typescript-eslint": "^8.46.2"
   },
   "dependencies": {
     "@dermotduffy/custom-card-helpers": "^1.9.1",
