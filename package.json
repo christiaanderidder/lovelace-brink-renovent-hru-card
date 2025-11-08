@@ -10,21 +10,21 @@
     }
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.0",
+    "@eslint/js": "^9.39.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.3.0",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "prettier": "^3.6.2",
-    "rollup": "^4.52.5",
+    "rollup": "^4.53.1",
     "rollup-plugin-filesize": "^10.0.0",
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.93.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.2"
+    "typescript-eslint": "^8.46.3"
   },
   "dependencies": {
     "@dermotduffy/custom-card-helpers": "^1.9.1",
