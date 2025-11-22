@@ -18,13 +18,13 @@
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "prettier": "^3.6.2",
-    "rollup": "^4.53.2",
+    "rollup": "^4.53.3",
     "rollup-plugin-filesize": "^10.0.0",
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-styler": "^2.0.0",
-    "sass": "^1.94.0",
+    "sass": "^1.94.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.47.0"
   },
   "dependencies": {
     "@dermotduffy/custom-card-helpers": "^1.9.1",
