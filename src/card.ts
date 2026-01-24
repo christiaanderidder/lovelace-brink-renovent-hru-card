@@ -20,16 +20,16 @@ import { customElement, state } from 'lit/decorators.js';
 import { HassEntity } from 'home-assistant-js-websocket';
 import {
   HomeAssistant,
-  MoreInfoActionConfig,
-  NavigateActionConfig,
-  handleAction,
-} from '@dermotduffy/custom-card-helpers';
-import { ButtonEvent, Config } from './types';
+  ButtonEvent,
+  Config,
+  MoreInfoEvent,
+  LocationChangedEvent,
+} from './types';
 import styles from './styles.scss';
 
 console.info(
-	`%cBrink Renovent HRU card`,
-	'color: white; font-weight: bold; background: #03a9f4; padding: 2px 4px;'
+  `%cBrink Renovent HRU card`,
+  'color: white; font-weight: bold; background: #03a9f4; padding: 2px 4px;',
 );
 
 window.customCards = window.customCards || [];
@@ -109,34 +109,49 @@ export class BrinkRenoventHruCard extends LitElement {
     const newFanModeWrite = hass.states[this.config.fanModeWriteEntity];
     const newOutdoorAirTemperature = hass.states[this.config.outdoorAirTemperatureEntity];
     const newIndoorAirTemperature = hass.states[this.config.indoorAirTemperatureEntity];
-    const newBypassValvePositionRead = hass.states[this.config.bypassValvePositionReadEntity];
-    const newBypassValvePositionWrite = hass.states[this.config.bypassValvePositionWriteEntity];
+    const newBypassValvePositionRead = this.config.bypassValvePositionReadEntity
+      ? hass.states[this.config.bypassValvePositionReadEntity]
+      : undefined;
+    const newBypassValvePositionWrite = this.config.bypassValvePositionWriteEntity
+      ? hass.states[this.config.bypassValvePositionWriteEntity]
+      : undefined;
     const newAirFlow = hass.states[this.config.airFlowEntity];
     const newAirFilter = hass.states[this.config.airFilterEntity];
-    const newZoneValvePosition = hass.states[this.config.zoneValvePositionEntity];
-    const newCo2Level1 = hass.states[this.config.co2Level1Entity];
-    const newCo2Level2 = hass.states[this.config.co2Level2Entity];
-    const newCo2Level3 = hass.states[this.config.co2Level3Entity];
-    const newCo2Level4 = hass.states[this.config.co2Level4Entity];
+    const newZoneValvePosition = this.config.zoneValvePositionEntity
+      ? hass.states[this.config.zoneValvePositionEntity]
+      : undefined;
+    const newCo2Level1 = this.config.co2Level1Entity
+      ? hass.states[this.config.co2Level1Entity]
+      : undefined;
+    const newCo2Level2 = this.config.co2Level2Entity
+      ? hass.states[this.config.co2Level2Entity]
+      : undefined;
+    const newCo2Level3 = this.config.co2Level3Entity
+      ? hass.states[this.config.co2Level3Entity]
+      : undefined;
+    const newCo2Level4 = this.config.co2Level4Entity
+      ? hass.states[this.config.co2Level4Entity]
+      : undefined;
 
-    if(this.fanModeRead?.state !== newFanModeRead?.state
-      || this.fanModeWrite?.state !== newFanModeWrite?.state
-      || this.outdoorAirTemperature?.state !== newOutdoorAirTemperature?.state
-      || this.indoorAirTemperature?.state !== newIndoorAirTemperature?.state
-      || this.bypassValvePositionRead?.state !== newBypassValvePositionRead?.state
-      || this.bypassValvePositionWrite?.state !== newBypassValvePositionWrite?.state
-      || this.airFlow?.state !== newAirFlow?.state
-      || this.airFilter?.state !== newAirFilter?.state
-      || this.zoneValvePosition?.state !== newZoneValvePosition?.state
-      || this.co2Level1?.state !== newCo2Level1?.state
-      || this.co2Level2?.state !== newCo2Level2?.state
-      || this.co2Level3?.state !== newCo2Level3?.state
-      || this.co2Level4?.state !== newCo2Level4?.state
+    if (
+      this.fanModeRead?.state !== newFanModeRead?.state ||
+      this.fanModeWrite?.state !== newFanModeWrite?.state ||
+      this.outdoorAirTemperature?.state !== newOutdoorAirTemperature?.state ||
+      this.indoorAirTemperature?.state !== newIndoorAirTemperature?.state ||
+      this.bypassValvePositionRead?.state !== newBypassValvePositionRead?.state ||
+      this.bypassValvePositionWrite?.state !== newBypassValvePositionWrite?.state ||
+      this.airFlow?.state !== newAirFlow?.state ||
+      this.airFilter?.state !== newAirFilter?.state ||
+      this.zoneValvePosition?.state !== newZoneValvePosition?.state ||
+      this.co2Level1?.state !== newCo2Level1?.state ||
+      this.co2Level2?.state !== newCo2Level2?.state ||
+      this.co2Level3?.state !== newCo2Level3?.state ||
+      this.co2Level4?.state !== newCo2Level4?.state
     ) {
-        // LitElement somehow does not detect changes in the state of entities, and therefore does not update the UI.
-        // For the time being, we force an update when any of the entities change.
-        this.requestUpdate();
-      }
+      // LitElement somehow does not detect changes in the state of entities, and therefore does not update the UI.
+      // For the time being, we force an update when any of the entities change.
+      this.requestUpdate();
+    }
 
     this.fanModeRead = newFanModeRead;
     this.fanModeWrite = newFanModeWrite;
@@ -222,7 +237,10 @@ export class BrinkRenoventHruCard extends LitElement {
     return html`
       <div>
         ${this.renderZoneValvePosition(this.zoneValvePosition)} ${this.renderAirFlow(this.airFlow)}
-        ${this.renderBypassValvePosition(this.bypassValvePositionRead, this.bypassValvePositionWrite)}
+        ${this.renderBypassValvePosition(
+          this.bypassValvePositionRead,
+          this.bypassValvePositionWrite,
+        )}
         ${this.renderAirFilterState(this.airFilter)}
       </div>
       <div>
@@ -257,11 +275,12 @@ export class BrinkRenoventHruCard extends LitElement {
   public renderBypassValvePosition(readEntity?: HassEntity, writeEntity?: HassEntity) {
     if (!readEntity) return;
 
-    const entity = writeEntity || readEntity
+    const entity = writeEntity || readEntity;
 
-    const actualState = entity.state !== readEntity.state
-      ? html`<span class="state-unavailable"> (${entity.state})</span>`
-      : '';
+    const actualState =
+      entity.state !== readEntity.state
+        ? html`<span class="state-unavailable"> (${entity.state})</span>`
+        : '';
 
     return html`
       <div class="hru-zone-line" .entity=${entity} @click=${this.moreInfo}>
@@ -269,8 +288,7 @@ export class BrinkRenoventHruCard extends LitElement {
           .path=${this.bypassValveIcon()}
           class=${this.bypassValveStateClass()}
         ></ha-svg-icon>
-        ${readEntity.state}
-        ${actualState}
+        ${readEntity.state} ${actualState}
       </div>
     `;
   }
@@ -321,10 +339,10 @@ export class BrinkRenoventHruCard extends LitElement {
           @click=${this.setFanMode}
           .disabled=${!button.canOverride}
           .path=${button.icon}
-          class=${
-            this.fanModeActiveStateClass(button.value, button.canOverride)
-            .concat(' ', this.fanModeRequestedStateClass(button.value))
-          }
+          class=${this.fanModeActiveStateClass(button.value, button.canOverride).concat(
+            ' ',
+            this.fanModeRequestedStateClass(button.value),
+          )}
         >
         </ha-icon-button>
       `,
@@ -356,9 +374,7 @@ export class BrinkRenoventHruCard extends LitElement {
   }
 
   private fanModeRequestedStateClass(state: string) {
-    return (this.fanModeWrite && this.fanModeWrite.state === state)
-      ? 'state-requested'
-      : '';
+    return this.fanModeWrite && this.fanModeWrite.state === state ? 'state-requested' : '';
   }
 
   private fanModeActiveStateClass(state: string, canOverride: boolean) {
@@ -391,25 +407,15 @@ export class BrinkRenoventHruCard extends LitElement {
     if (!this.ha) return;
 
     const entityId = ev.currentTarget.entity.entity_id;
-    const config = {
-      entity: entityId,
-      tap_action: {
-        entity: entityId,
-        action: 'more-info',
-      } as MoreInfoActionConfig,
-    };
-    handleAction(this, this.ha, config, 'tap');
+    const event = new MoreInfoEvent({entityId});
+    this.dispatchEvent(event);
   }
 
   private navigate(path: string) {
     if (!this.ha) return;
 
-    const config = {
-      tap_action: {
-        navigation_path: path,
-        action: 'navigate',
-      } as NavigateActionConfig,
-    };
-    handleAction(this, this.ha, config, 'tap');
+    history.pushState(null, '', path);
+    const event = new LocationChangedEvent();
+    this.dispatchEvent(event);
   }
 }
