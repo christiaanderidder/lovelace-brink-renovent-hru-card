@@ -16,14 +16,14 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.3.0",
     "eslint": "^9.39.2",
-    "globals": "^17.1.0",
+    "globals": "^17.2.0",
     "prettier": "^3.8.1",
-    "rollup": "^4.56.0",
+    "rollup": "^4.57.1",
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.97.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.53.1"
+    "typescript-eslint": "^8.54.0"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
