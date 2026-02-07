@@ -16,7 +16,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.3.0",
     "eslint": "^9.39.2",
-    "globals": "^17.2.0",
+    "globals": "^17.3.0",
     "prettier": "^3.8.1",
     "rollup": "^4.57.1",
     "rollup-plugin-serve": "^3.0.0",
