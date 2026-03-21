@@ -15,15 +15,15 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
-    "eslint": "^10.0.3",
+    "eslint": "^10.1.0",
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
-    "rollup": "^4.59.0",
+    "rollup": "^4.59.1",
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.98.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.0"
+    "typescript-eslint": "^8.57.1"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
