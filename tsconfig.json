@@ -4,7 +4,8 @@
     "target": "es2023",
     "lib": ["es2023", "dom"],
     "strict": true,
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
   },
   "include": ["src/**/*.ts"]
