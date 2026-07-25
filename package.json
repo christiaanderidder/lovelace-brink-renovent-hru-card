@@ -22,7 +22,7 @@
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-styler": "^2.0.0",
     "sass": "^1.102.0",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0"
   },
   "dependencies": {
