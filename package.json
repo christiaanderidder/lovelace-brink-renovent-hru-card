@@ -20,7 +20,7 @@
     "prettier": "^3.10.1",
     "rollup": "^4.68.6",
     "rollup-plugin-serve": "^3.0.0",
-    "rollup-plugin-styler": "^2.1.0",
+    "rollup-plugin-styler": "^3.0.1",
     "sass": "^1.108.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.73.0"
